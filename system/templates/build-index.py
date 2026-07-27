@@ -8,7 +8,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 # (檔名, 標籤, 篩選分類)——分類：小/中/半/全（物件依尺度範圍可屬多類）
 OBJECTS = [
-    ("C0-headings.html", "C0 標題 H1／H2／H3【常用｜小區塊｜標題】", "小 題"),
+    ("C0-headings.html", "C0 標題 H1／H2／H3【常用｜小區塊｜標題】", "小 題 常"),
     ("C1-highlight.html", "C1 螢光筆標記【文字級】", "小"),
     ("C2-series-pill.html", "C2 系列標籤【小區塊｜標題】", "小 題"),
     ("C3-subtitle.html", "C3 副標分隔線【小區塊｜標題】", "小 題"),
@@ -29,15 +29,15 @@ OBJECTS = [
     ("C15-bigquote.html", "C15 金句引號【中區塊～半頁】", "中 半"),
     ("C16-author.html", "C16 自介卡【中區塊】", "中"),
     ("C17-iconflow.html", "C17 垂直 icon 流程【半頁～全頁】", "半 全"),
-    ("C18-pills.html", "C18 膠囊家族【常用｜小區塊～中區塊】", "小 中"),
-    ("C19-fork.html", "C19 岔路家族【常用｜半頁～全頁】", "半 全"),
+    ("C18-pills.html", "C18 膠囊家族【常用｜小區塊～中區塊】", "小 中 常"),
+    ("C19-fork.html", "C19 岔路家族【常用｜半頁～全頁】", "半 全 常"),
     ("C20-spectrum.html", "C20 光譜條【備用｜小區塊】", "小"),
     ("C21-dual.html", "C21 同詞雙義卡【備用｜中區塊～半頁】", "中 半"),
     ("C22-note.html", "C22 對話邊註【備用｜小區塊】", "小"),
-    ("C23-cycle.html", "C23 循環圖【常用｜中區塊～半頁】", "中 半"),
+    ("C23-cycle.html", "C23 循環圖【常用｜中區塊～半頁】", "中 半 常"),
     ("C24-slot.html", "C24 圖位【小區塊～全頁】", "小 中 半 全"),
-    ("C25-bigstat.html", "C25 超大數字【常用｜中區塊～半頁】", "中 半"),
-    ("C26-term.html", "C26 中英名詞標【常用｜小區塊｜標題】", "小 題"),
+    ("C25-bigstat.html", "C25 超大數字【常用｜中區塊～半頁】", "中 半 常"),
+    ("C26-term.html", "C26 中英名詞標【常用｜小區塊｜標題】", "小 題 常"),
     ("C26b-reveal.html", "C26b 外文揭曉【中區塊｜標題】", "中 題"),
 ]
 
@@ -131,6 +131,7 @@ out = """<!DOCTYPE html>
   <button data-f="半">半頁物件</button>
   <button data-f="全">全頁物件</button>
   <button data-f="題">標題</button>
+  <button data-f="常">常用</button>
 </div>
 <section id="sec-obj">
 <h2>物件（積木：可調檔位、可變化，變化寫進工單）</h2>
