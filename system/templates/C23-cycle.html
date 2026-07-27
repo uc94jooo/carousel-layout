@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>C23 循環圖（物件標本）</title>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="../../themes/themes.css">
+<link rel="stylesheet" href="assets/base.css">
+<!-- C23 循環圖物件標本（規格見 components.md C23）
+     本檔只展示物件本體；組頁時把物件塊複製進頁面，組裝參考任務實例庫（page-layouts.md）。
+     .cycle 容器內：SVG 三條弧線（marker 箭頭、順時針）＋三個 .cnode 絕對定位節點
+     （頂、右下、左下）＋ .ccenter 中央句。節點內文 2～4 字；改節點位置時同步調整
+     SVG path 端點。首排實例：「分心是嚴重的缺點嗎」P4。 -->
+</head>
+<body>
+<div class="page center" style="justify-content: center;">
+
+  <div class="cycle">
+    <svg viewBox="0 0 760 540" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#1C1C1A"/>
+        </marker>
+      </defs>
+      <path d="M 470 90 Q 660 140 620 380" fill="none" style="stroke: var(--ink); stroke-width: 5;" marker-end="url(#arw)"/>
+      <path d="M 520 470 Q 380 540 240 470" fill="none" style="stroke: var(--ink); stroke-width: 5;" marker-end="url(#arw)"/>
+      <path d="M 140 380 Q 100 140 290 90" fill="none" style="stroke: var(--ink); stroke-width: 5;" marker-end="url(#arw)"/>
+    </svg>
+    <div class="cnode" style="left: 50%; top: 70px;">滑雪</div>
+    <div class="cnode" style="left: 79%; top: 430px;">唸書</div>
+    <div class="cnode" style="left: 21%; top: 430px;">走秀</div>
+    <div class="ccenter">煩了，<br>就換</div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>L5 scene-full 滿版情境頁</title>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="../../themes/themes.css">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  /* 滿版頁：插畫鋪滿，文字卡疊上去 */
+  .page.scene { padding: 0; }
+  .scene-bg {
+    position: absolute;
+    inset: 0;
+  }
+  .scene-card {
+    position: absolute;
+    left: var(--page-pad);
+    bottom: 200px;
+    max-width: 620px;
+    background: var(--bg-card);
+    border: var(--border-w) solid var(--ink);
+    border-radius: var(--radius-card);
+    padding: var(--card-pad);
+    font-size: var(--text-body);
+    font-weight: 700;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="page scene">
+  <div class="scene-bg illust-slot" style="border: none;">
+    滿版插畫位：辦公室夜景，一個人對著<br>
+    滿牆的數字報表微笑，身後的家人照片蒙塵
+  </div>
+
+  <div class="scene-card">
+    數字每一格都是綠的，<br>
+    只有<span class="hl">回家的路</span>越來越暗。
+  </div>
+
+  <div class="footer">IG @uncle.johs</div>
+</div>
+</body>
+</html>

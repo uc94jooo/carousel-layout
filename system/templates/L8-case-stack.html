@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>L8 case-stack 案例堆疊頁</title>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="../../themes/themes.css">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  .case-card {
+    background: var(--bg-card);
+    border: var(--border-w) solid var(--ink);
+    border-radius: var(--radius-card);
+    padding: 32px;
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  .case-card .side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+  .case-card .case-text { display: flex; flex-direction: column; gap: 12px; }
+  .case-card .case-title { font-size: 38px; font-weight: 900; font-family: var(--font-head); margin-bottom: 10px; }
+  .case-card .case-body { font-size: 31px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="h1" style="font-size: 64px;">蘇聯的釘子工廠<br>跟做行銷的你<br>其實是同一種人</div>
+
+  <div class="case-card">
+    <div class="side">
+      <div class="num-circle">1</div>
+      <div class="illust-slot" style="width: 130px; height: 130px; border-radius: 20px; font-size: 24px;">icon<br>鐵釘</div>
+    </div>
+    <div class="case-text">
+      <div class="case-title">蘇聯的釘子工廠：</div>
+      <div class="case-body">
+        KPI 訂「重量」，就做出幾百公斤的巨型鐵釘。KPI 改訂「數量」，馬上換成一折就斷的迷你釘。指標年年達標，釘子沒有一根能用。
+      </div>
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="side">
+      <div class="num-circle">2</div>
+      <div class="illust-slot" style="width: 130px; height: 130px; border-radius: 20px; font-size: 24px;">icon<br>螢幕</div>
+    </div>
+    <div class="case-text">
+      <div class="case-title">做行銷的我們：</div>
+      <div class="case-body">
+        怕觀眾沒耐心，影片剪得越來越短；想衝點擊，標題下得越來越重；留言太少，乾脆用贈品換留言。每一步單獨看都說得通，湊在一起才發現──數字全部達標，內容卻曇花一現。
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="body" style="text-align: center; font-weight: 700;">
+    這種<span class="hl">「指標失效」</span>的現象，來自一個經濟學理論<span class="arrow-lead">→</span>
+  </div>
+
+  <div class="footer">IG @uncle.johs</div>
+</div>
+</body>
+</html>

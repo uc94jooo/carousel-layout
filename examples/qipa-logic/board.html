@@ -1,0 +1,3267 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head><meta charset="UTF-8"><title>範例輪播・試衣間</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#3a3a36; font-family:"PingFang TC",sans-serif; padding:40px; }
+.notice { background:#4a4a44; border:1px solid #6a6a60; border-radius:10px; padding:18px 22px;
+  color:#e8e8e2; font-size:14px; line-height:1.8; margin-bottom:24px; }
+.notice b { color:#f7e94e; }
+h1 { font-size:26px; color:#e8e8e2; margin-bottom:14px; }
+.controls { position:sticky; top:0; z-index:9; background:#3a3a36; padding:14px 0 18px;
+  display:flex; flex-wrap:wrap; gap:18px; align-items:center; border-bottom:1px solid #55554d; margin-bottom:28px; }
+.ctl { display:flex; align-items:center; gap:8px; }
+.ctl .name { color:#9a9a90; font-size:13px; letter-spacing:.1em; }
+.ctl button { font-size:14px; padding:8px 16px; border-radius:999px; border:1px solid #6a6a60;
+  background:#4a4a44; color:#e8e8e2; cursor:pointer; }
+.ctl button.on { background:#f7e94e; color:#1b1b19; border-color:#f7e94e; font-weight:700; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:28px; }
+.thumb { color:#e8e8e2; }
+.thumb .label { font-size:14px; font-weight:700; margin-top:10px; display:block; }
+.frame-wrap { width:100%; aspect-ratio:1080/1350; overflow:hidden; border-radius:8px;
+  box-shadow:0 6px 24px rgba(0,0,0,.4); position:relative; background:#eaeae8; }
+.frame-wrap iframe { width:1080px; height:1350px; border:0; transform-origin:top left;
+  position:absolute; top:0; left:0; pointer-events:none; }
+</style></head>
+<body>
+<h1>「只有 7% 的人答對」邏輯題輪播・試衣間</h1>
+<div class="controls">
+  <div class="ctl"><span class="name">主題</span>
+    <button data-k="theme" data-v="gray" class="on">灰色</button>
+    <button data-k="theme" data-v="warm">暖色</button>
+    <button data-k="theme" data-v="pink">粉色（試驗）</button>
+  </div>
+  <div class="ctl"><span class="name">線框</span>
+    <button data-k="frame" data-v="off" class="on">無框</button>
+    <button data-k="frame" data-v="on">有框</button>
+  </div>
+  <div class="ctl"><span class="name">格線</span>
+    <button data-k="grid" data-v="off" class="on">無格</button>
+    <button data-k="grid" data-v="on">有格</button>
+  </div>
+</div>
+<div class="grid">
+<div class="thumb"><div class="frame-wrap"><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;P1 封面 L1b&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;themes/themes.css&quot;&gt;
+&lt;style&gt;
+/* ============================================
+   排版小幫手 design tokens
+   單一事實來源：../../design-tokens.md
+   色值：2026-07-22 依使用者提供之成品合成圖視覺精校，
+   第六步重製驗證時再微調。
+   ============================================ */
+
+/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
+   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  /* 基底色 */
+  /* 主題色（--bg-page/--bg-cover/--grid-line）已模組化：見 themes/ 目錄，頁面需連結 themes.css */
+  --bg-card: #ffffff;
+  --bg-cream: #f6f0df;
+  --ink: #1b1b19;
+  --ink-soft: #55554f;
+
+  /* 強調色（全系列唯一） */
+  --highlight: #f7e94e;
+
+  /* 插畫限定色：只給插畫與 icon，不進版式 */
+  --illust-skin: #f2e3d5;
+  --illust-hair: #6b5647;
+  --illust-red: #e8626d;
+  --illust-tan: #d9a662;
+
+  /* 字型 */
+  --font-head: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+  --font-body: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+
+  /* 字級（1080 寬基準） */
+  --text-hero: 128px;
+  --text-h1: 76px;
+  --text-h2: 48px;
+  --text-body: 38px;
+  --text-caption: 30px;
+  --text-footer: 26px;
+
+  /* 間距與圓角 */
+  --page-pad: 72px;
+  --block-gap: 48px;
+  --card-pad: 40px;
+  --card-gap: 32px;
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --border-w: 3px;
+  --quote-bar-w: 10px;
+}
+
+/* ============================================
+   主題：螢光筆灰色（預設）
+   定位：思考、理性、知識類
+   啟用：class=&quot;page&quot;（不加任何主題 class 即此主題）
+   內頁 #EAEAE8 淺暖灰｜封面 #D2D2CE 銀灰｜格線 墨色 5.5%（選配）
+   ============================================ */
+:root {
+  --bg-page: #eaeae8;
+  --bg-cover: #d2d2ce;
+  --grid-line: rgba(27, 27, 25, 0.055);
+}
+
+/* ============================================
+   主題：螢光粉色（rhode 取向，2026-07-22 轉正）
+   定位：兩性、感情、輕生活類
+   啟用：class=&quot;page pink&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #F1E4E2 淺腮紅｜封面 #D6ACAC 乾燥玫瑰｜格線 玫瑰褐 9%
+   ============================================ */
+.page.pink {
+  --bg-page: #f1e4e2;
+  --bg-cover: #d6acac;
+  --grid-line: rgba(153, 92, 97, 0.09);
+}
+
+/* ============================================
+   主題：螢光暖色
+   定位：生活感、情感、儀式類
+   啟用：class=&quot;page warm&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #EFEAE2 暖象牙｜封面 #D8D1C6 greige｜格線 暖褐 8%
+   ============================================ */
+.page.warm {
+  --bg-page: #efeae2;
+  --bg-cover: #d8d1c6;
+  --grid-line: rgba(93, 78, 62, 0.08);
+}
+
+/* ============================================
+   排版小幫手 base：頁面骨架 + C1~C13 元件
+   元件規格：../../components.md
+   ============================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #cfcfcd; /* 預覽用外框色，截圖時只取 .page */
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+/* ---------- 頁面畫布 1080×1350 ---------- */
+.page {
+  width: 1080px;
+  height: 1350px;
+  background: var(--bg-page);
+  padding: var(--page-pad);
+  padding-bottom: 120px; /* 頁尾保留區 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--block-gap);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.page.center { align-items: center; text-align: center; }
+.page.cover { background: var(--bg-cover); }
+
+/* ---------- 文字層級 ---------- */
+.hero  { font-size: var(--text-hero); font-weight: 900; line-height: 1.25; letter-spacing: 0.02em; font-family: var(--font-head); }
+.h1    { font-size: var(--text-h1);   font-weight: 900; line-height: 1.3;  letter-spacing: 0.02em; font-family: var(--font-head); }
+.h2    { font-size: var(--text-h2);   font-weight: 700; line-height: 1.4;  font-family: var(--font-head); }
+.body  { font-size: var(--text-body); font-weight: 500; line-height: 1.6;  letter-spacing: 0.05em; }
+.caption { font-size: var(--text-caption); font-weight: 500; line-height: 1.5; color: var(--ink-soft); }
+
+/* ---------- C1 螢光筆 ---------- */
+.hl {
+  background: var(--highlight);
+  padding: 0.02em 0.1em;
+  border-radius: 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ---------- C2 系列標籤 ---------- */
+.series-pill {
+  align-self: center;
+  background: var(--ink);
+  color: var(--bg-page);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  padding: 12px 36px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.15em;
+}
+
+/* ---------- C3 副標分隔線 ---------- */
+.subtitle-rule {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  justify-content: center;
+  font-size: var(--text-h2);
+  font-weight: 700;
+  width: 100%;
+}
+.subtitle-rule::before,
+.subtitle-rule::after {
+  content: &quot;&quot;;
+  flex: 1;
+  max-width: 130px;
+  border-top: var(--border-w) solid var(--ink);
+}
+
+/* ---------- C4 對話框 ---------- */
+.bubble {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 20px 32px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  position: relative;
+  width: fit-content;
+}
+.bubble::after {
+  content: &quot;&quot;;
+  position: absolute;
+  bottom: -18px;
+  left: 48px;
+  border: 12px solid transparent;
+  border-top-color: var(--ink);
+}
+.bubble.tail-right::after { left: auto; right: 48px; }
+
+/* ---------- C5 情境卡 ---------- */
+.scenario-card {
+  background: var(--bg-cream);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.scenario-card .avatar { flex-shrink: 0; }
+.scenario-card .lines { display: flex; flex-direction: column; gap: 18px; font-size: var(--text-body); line-height: 1.55; text-align: left; }
+
+/* ---------- C6 對照卡 ---------- */
+.versus { display: flex; gap: var(--card-gap); width: 100%; }
+.versus-card {
+  flex: 1;
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  text-align: center;
+}
+.versus-card .vs-title { font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head); }
+.versus-card .vs-body { font-size: var(--text-body); line-height: 1.6; text-align: left; }
+
+/* ---------- C7 編號圓圈 ---------- */
+.num-circle {
+  width: 88px;
+  height: 88px;
+  border: 5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  font-weight: 900;
+  font-family: var(--font-head);
+  flex-shrink: 0;
+}
+
+/* ---------- C8 引言黑線框 ---------- */
+.quote-bar {
+  border-left: var(--quote-bar-w) solid var(--ink);
+  padding: 12px 0 12px 44px;
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.55;
+  font-family: var(--font-head);
+  text-align: left;
+}
+
+/* ---------- C9 icon 三欄組 ---------- */
+.icon-trio { display: flex; width: 100%; }
+.icon-trio .col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.icon-trio .col .h2 { font-weight: 900; }
+
+/* ---------- C10 橫向流程條 ---------- */
+.flow-strip {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 28px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+.flow-strip .node { display: flex; align-items: center; gap: 16px; font-size: var(--text-caption); font-weight: 700; }
+.flow-strip .arrow { font-size: 40px; font-weight: 900; }
+
+/* ---------- C11 CTA 黃條 ---------- */
+.cta-bar {
+  background: var(--highlight);
+  border-radius: var(--radius-card);
+  padding: 32px var(--card-pad);
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: left;
+  width: 100%;
+}
+
+/* ---------- C13 頁尾 ---------- */
+.footer {
+  position: absolute;
+  bottom: 44px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: var(--text-footer);
+  color: var(--ink-soft);
+  letter-spacing: 0.08em;
+}
+
+/* ---------- 插畫佔位（產圖時以 AI 插畫替換） ---------- */
+.illust-slot {
+  border: 3px dashed #a9a9a4;
+  border-radius: var(--radius-card);
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-caption);
+  text-align: center;
+  line-height: 1.6;
+  padding: 20px;
+}
+.avatar-slot {
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* ---------- 通用小工具 ---------- */
+.spacer { flex: 1; }
+.arrow-lead { font-weight: 700; }
+.divider-dotted {
+  width: 0;
+  border-left: 4px dotted var(--ink);
+  height: 40px;
+  margin-left: 44px;
+}
+
+/* ---------- C14 勾選清單 ---------- */
+.checklist { display: flex; flex-direction: column; gap: 44px; }
+.check-item { display: flex; gap: 28px; align-items: flex-start; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.check-item .mark { font-size: 46px; line-height: 1.2; }
+
+/* ---------- C15 金句引號 ---------- */
+.big-quote {
+  position: relative;
+  padding: 40px 90px;
+  font-size: var(--text-h2);
+  font-weight: 900;
+  line-height: 1.65;
+  text-align: center;
+  font-family: var(--font-head);
+}
+.big-quote::before, .big-quote::after {
+  position: absolute;
+  font-size: 130px;
+  font-family: Georgia, serif;
+  color: var(--ink);
+  line-height: 1;
+}
+.big-quote::before { content: &quot;\201C&quot;; left: 0; top: -10px; }
+.big-quote::after  { content: &quot;\201D&quot;; right: 0; bottom: -40px; }
+
+/* ---------- C16 自介卡 ---------- */
+.author-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 36px;
+  width: 100%;
+  align-items: flex-start;
+}
+.author-card .photo-slot {
+  width: 250px;
+  height: 250px;
+  border-radius: 16px;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.author-card .info { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.author-card .name { font-size: 42px; font-weight: 900; font-family: var(--font-head); }
+.author-card .bio { font-size: 27px; line-height: 1.65; color: var(--ink); }
+.author-card .follow { font-size: 27px; font-weight: 700; margin-top: 6px; }
+
+/* ---------- C17 垂直 icon 流程 ---------- */
+.icon-flow { display: flex; flex-direction: column; }
+.icon-flow .row { display: flex; align-items: center; gap: 36px; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.icon-flow .glyph { width: 100px; font-size: 64px; text-align: center; flex-shrink: 0; }
+.icon-flow .link { border-left: 4px dashed var(--ink); height: 52px; margin-left: 50px; }
+
+/* ---------- 佔位框統一改為灰白棋盤格（20px 格，示意「待填圖」） ---------- */
+.illust-slot, .avatar-slot, .author-card .photo-slot {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%),
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  color: #8a8a85;
+  text-shadow: 0 0 6px #ffffff, 0 0 12px #ffffff;
+}
+
+/* ---------- 斷行優化：避免行尾孤字（詳見 design-tokens.md 字數預算） ---------- */
+body { line-break: strict; }
+.hero, .h1, .h2, .quote-bar, .subtitle-rule { text-wrap: balance; }
+.body, .vs-body, .case-body, .point .text, .scenario-card .lines,
+.check-item, .bubble, .cta-bar, .author-card .bio { text-wrap: pretty; }
+
+/* ---------- 方格紙底紋（格線色隨主題） ----------
+   規則（2026-07-22 定案）：暖色主題內頁「預設」帶格子紙（封面除外）；
+   灰色主題為選配（加 .grid-paper 啟用）。暖主題內頁要素底時加 .no-grid 退出。 */
+.page.grid-paper,
+.page.warm:not(.cover),
+.page.pink:not(.cover) {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-position: center top;
+}
+.page.no-grid { background-image: none !important; }
+
+/* ---------- 線框（選配，任何主題可疊 .lined）：內緣細墨線框＋頁尾隔間線 ---------- */
+.page.lined { padding: 116px 104px 168px; }
+.page.lined::before {
+  content: &quot;&quot;;
+  position: absolute;
+  inset: 44px;
+  border: 2px solid var(--ink);
+  pointer-events: none;
+}
+.page.lined::after {
+  content: &quot;&quot;;
+  position: absolute;
+  left: 44px;
+  right: 44px;
+  bottom: 122px;
+  border-top: 2px solid var(--ink);
+}
+.page.lined .footer { bottom: 72px; }
+
+/* 本組自組元件。效果好的候選回收入庫（見 SKILL.md 版型層規則） */
+
+/* 雙行封面標題（L1b 規格：88px） */
+.hero2 { font-size: 88px; font-weight: 900; line-height: 1.3; letter-spacing: .02em; font-family: var(--font-head); text-wrap: balance; }
+
+/* C1 句級螢光筆的獨立行版本 */
+.hl-line {
+  display: inline-block; background: var(--highlight);
+  padding: .08em .35em; border-radius: 8px;
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+}
+
+/* 翻頁引導句 */
+.bridge { font-size: var(--text-caption); font-weight: 700; color: var(--ink-soft); letter-spacing: .06em; }
+
+/* 直欄式案例卡（L8 變體：第一行加大） */
+.case-col {
+  background: var(--bg-card); border-radius: var(--radius-card);
+  padding: var(--card-pad) 56px; width: 100%;
+  display: flex; flex-direction: column; gap: 20px; text-align: left;
+}
+.case-col .first-line {
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  display: flex; align-items: center; gap: 24px;
+}
+.case-col .first-line .num-circle { width: 72px; height: 72px; font-size: 40px; }
+.case-col .row {
+  font-size: 40px; font-weight: 700; line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  display: flex; align-items: baseline; gap: 18px;
+}
+.case-col .row .mk { font-size: 36px; }
+
+.page.dense { gap: 34px; }
+.page.dense .case-col { padding: 32px 56px; gap: 16px; }
+.cta-bar .ico { font-size: 52px; line-height: 1; }
+
+/* 實畫圓餅圖（插畫位由 SVG 實作） */
+svg.pie { display: block; }
+svg.pie text { font-family: var(--font-head); font-weight: 900; fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+svg.pie .pie-bg { fill: var(--bg-card); }
+svg.pie .ring { fill: none; stroke: var(--ink); stroke-width: 7; }
+svg.pie .spoke { stroke: var(--ink); stroke-width: 6; }
+svg.pie .marker { stroke: var(--highlight); stroke-width: 96; stroke-linecap: round; opacity: .5; }
+
+&lt;/style&gt;
+&lt;style&gt;body{padding:0;background:transparent;display:block;}&lt;/style&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;page center cover&quot;&gt;
+  &lt;div class=&quot;series-pill&quot;&gt;經典思考系列&lt;/div&gt;
+  &lt;div class=&quot;hero2&quot;&gt;只有 &lt;span class=&quot;hl&quot;&gt;7%&lt;/span&gt; 的人&lt;br&gt;答對這一題&lt;/div&gt;
+  &lt;div class=&quot;subtitle-rule&quot;&gt;第一直覺 ≠ 正確答案&lt;/div&gt;
+  &lt;div class=&quot;spacer&quot;&gt;&lt;/div&gt;
+  &lt;svg class=&quot;pie&quot; width=&quot;500&quot; height=&quot;500&quot; viewBox=&quot;0 0 720 720&quot; role=&quot;img&quot; aria-label=&quot;六格圓餅圖，其中一格是問號&quot;&gt;
+      &lt;circle class=&quot;pie-bg&quot; cx=&quot;360&quot; cy=&quot;360&quot; r=&quot;330&quot;/&gt;
+      &lt;circle class=&quot;ring&quot; cx=&quot;360&quot; cy=&quot;360&quot; r=&quot;330&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;360&quot; y1=&quot;30&quot; x2=&quot;360&quot; y2=&quot;690&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;645.8&quot; y1=&quot;195&quot; x2=&quot;74.2&quot; y2=&quot;525&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;645.8&quot; y1=&quot;525&quot; x2=&quot;74.2&quot; y2=&quot;195&quot;/&gt;
+      &lt;circle cx=&quot;248&quot; cy=&quot;165&quot; r=&quot;66&quot; fill=&quot;var(--highlight)&quot;/&gt;
+      &lt;text x=&quot;472&quot; y=&quot;165&quot; font-size=&quot;84&quot;&gt;3&lt;/text&gt;
+      &lt;text x=&quot;585&quot; y=&quot;360&quot; font-size=&quot;84&quot;&gt;5&lt;/text&gt;
+      &lt;text x=&quot;472&quot; y=&quot;555&quot; font-size=&quot;84&quot;&gt;8&lt;/text&gt;
+      &lt;text x=&quot;248&quot; y=&quot;555&quot; font-size=&quot;84&quot;&gt;13&lt;/text&gt;
+      &lt;text x=&quot;135&quot; y=&quot;360&quot; font-size=&quot;84&quot;&gt;22&lt;/text&gt;
+      &lt;text x=&quot;248&quot; y=&quot;165&quot; font-size=&quot;84&quot;&gt;?&lt;/text&gt;
+    &lt;/svg&gt;
+  &lt;div class=&quot;spacer&quot;&gt;&lt;/div&gt;
+  &lt;div class=&quot;footer&quot;&gt;IG @uncle.johs&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe></div><span class="label">01 · L1b 封面</span></div>
+<div class="thumb"><div class="frame-wrap"><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;P2 熱身題 L3&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;themes/themes.css&quot;&gt;
+&lt;style&gt;
+/* ============================================
+   排版小幫手 design tokens
+   單一事實來源：../../design-tokens.md
+   色值：2026-07-22 依使用者提供之成品合成圖視覺精校，
+   第六步重製驗證時再微調。
+   ============================================ */
+
+/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
+   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  /* 基底色 */
+  /* 主題色（--bg-page/--bg-cover/--grid-line）已模組化：見 themes/ 目錄，頁面需連結 themes.css */
+  --bg-card: #ffffff;
+  --bg-cream: #f6f0df;
+  --ink: #1b1b19;
+  --ink-soft: #55554f;
+
+  /* 強調色（全系列唯一） */
+  --highlight: #f7e94e;
+
+  /* 插畫限定色：只給插畫與 icon，不進版式 */
+  --illust-skin: #f2e3d5;
+  --illust-hair: #6b5647;
+  --illust-red: #e8626d;
+  --illust-tan: #d9a662;
+
+  /* 字型 */
+  --font-head: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+  --font-body: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+
+  /* 字級（1080 寬基準） */
+  --text-hero: 128px;
+  --text-h1: 76px;
+  --text-h2: 48px;
+  --text-body: 38px;
+  --text-caption: 30px;
+  --text-footer: 26px;
+
+  /* 間距與圓角 */
+  --page-pad: 72px;
+  --block-gap: 48px;
+  --card-pad: 40px;
+  --card-gap: 32px;
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --border-w: 3px;
+  --quote-bar-w: 10px;
+}
+
+/* ============================================
+   主題：螢光筆灰色（預設）
+   定位：思考、理性、知識類
+   啟用：class=&quot;page&quot;（不加任何主題 class 即此主題）
+   內頁 #EAEAE8 淺暖灰｜封面 #D2D2CE 銀灰｜格線 墨色 5.5%（選配）
+   ============================================ */
+:root {
+  --bg-page: #eaeae8;
+  --bg-cover: #d2d2ce;
+  --grid-line: rgba(27, 27, 25, 0.055);
+}
+
+/* ============================================
+   主題：螢光粉色（rhode 取向，2026-07-22 轉正）
+   定位：兩性、感情、輕生活類
+   啟用：class=&quot;page pink&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #F1E4E2 淺腮紅｜封面 #D6ACAC 乾燥玫瑰｜格線 玫瑰褐 9%
+   ============================================ */
+.page.pink {
+  --bg-page: #f1e4e2;
+  --bg-cover: #d6acac;
+  --grid-line: rgba(153, 92, 97, 0.09);
+}
+
+/* ============================================
+   主題：螢光暖色
+   定位：生活感、情感、儀式類
+   啟用：class=&quot;page warm&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #EFEAE2 暖象牙｜封面 #D8D1C6 greige｜格線 暖褐 8%
+   ============================================ */
+.page.warm {
+  --bg-page: #efeae2;
+  --bg-cover: #d8d1c6;
+  --grid-line: rgba(93, 78, 62, 0.08);
+}
+
+/* ============================================
+   排版小幫手 base：頁面骨架 + C1~C13 元件
+   元件規格：../../components.md
+   ============================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #cfcfcd; /* 預覽用外框色，截圖時只取 .page */
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+/* ---------- 頁面畫布 1080×1350 ---------- */
+.page {
+  width: 1080px;
+  height: 1350px;
+  background: var(--bg-page);
+  padding: var(--page-pad);
+  padding-bottom: 120px; /* 頁尾保留區 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--block-gap);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.page.center { align-items: center; text-align: center; }
+.page.cover { background: var(--bg-cover); }
+
+/* ---------- 文字層級 ---------- */
+.hero  { font-size: var(--text-hero); font-weight: 900; line-height: 1.25; letter-spacing: 0.02em; font-family: var(--font-head); }
+.h1    { font-size: var(--text-h1);   font-weight: 900; line-height: 1.3;  letter-spacing: 0.02em; font-family: var(--font-head); }
+.h2    { font-size: var(--text-h2);   font-weight: 700; line-height: 1.4;  font-family: var(--font-head); }
+.body  { font-size: var(--text-body); font-weight: 500; line-height: 1.6;  letter-spacing: 0.05em; }
+.caption { font-size: var(--text-caption); font-weight: 500; line-height: 1.5; color: var(--ink-soft); }
+
+/* ---------- C1 螢光筆 ---------- */
+.hl {
+  background: var(--highlight);
+  padding: 0.02em 0.1em;
+  border-radius: 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ---------- C2 系列標籤 ---------- */
+.series-pill {
+  align-self: center;
+  background: var(--ink);
+  color: var(--bg-page);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  padding: 12px 36px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.15em;
+}
+
+/* ---------- C3 副標分隔線 ---------- */
+.subtitle-rule {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  justify-content: center;
+  font-size: var(--text-h2);
+  font-weight: 700;
+  width: 100%;
+}
+.subtitle-rule::before,
+.subtitle-rule::after {
+  content: &quot;&quot;;
+  flex: 1;
+  max-width: 130px;
+  border-top: var(--border-w) solid var(--ink);
+}
+
+/* ---------- C4 對話框 ---------- */
+.bubble {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 20px 32px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  position: relative;
+  width: fit-content;
+}
+.bubble::after {
+  content: &quot;&quot;;
+  position: absolute;
+  bottom: -18px;
+  left: 48px;
+  border: 12px solid transparent;
+  border-top-color: var(--ink);
+}
+.bubble.tail-right::after { left: auto; right: 48px; }
+
+/* ---------- C5 情境卡 ---------- */
+.scenario-card {
+  background: var(--bg-cream);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.scenario-card .avatar { flex-shrink: 0; }
+.scenario-card .lines { display: flex; flex-direction: column; gap: 18px; font-size: var(--text-body); line-height: 1.55; text-align: left; }
+
+/* ---------- C6 對照卡 ---------- */
+.versus { display: flex; gap: var(--card-gap); width: 100%; }
+.versus-card {
+  flex: 1;
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  text-align: center;
+}
+.versus-card .vs-title { font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head); }
+.versus-card .vs-body { font-size: var(--text-body); line-height: 1.6; text-align: left; }
+
+/* ---------- C7 編號圓圈 ---------- */
+.num-circle {
+  width: 88px;
+  height: 88px;
+  border: 5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  font-weight: 900;
+  font-family: var(--font-head);
+  flex-shrink: 0;
+}
+
+/* ---------- C8 引言黑線框 ---------- */
+.quote-bar {
+  border-left: var(--quote-bar-w) solid var(--ink);
+  padding: 12px 0 12px 44px;
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.55;
+  font-family: var(--font-head);
+  text-align: left;
+}
+
+/* ---------- C9 icon 三欄組 ---------- */
+.icon-trio { display: flex; width: 100%; }
+.icon-trio .col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.icon-trio .col .h2 { font-weight: 900; }
+
+/* ---------- C10 橫向流程條 ---------- */
+.flow-strip {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 28px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+.flow-strip .node { display: flex; align-items: center; gap: 16px; font-size: var(--text-caption); font-weight: 700; }
+.flow-strip .arrow { font-size: 40px; font-weight: 900; }
+
+/* ---------- C11 CTA 黃條 ---------- */
+.cta-bar {
+  background: var(--highlight);
+  border-radius: var(--radius-card);
+  padding: 32px var(--card-pad);
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: left;
+  width: 100%;
+}
+
+/* ---------- C13 頁尾 ---------- */
+.footer {
+  position: absolute;
+  bottom: 44px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: var(--text-footer);
+  color: var(--ink-soft);
+  letter-spacing: 0.08em;
+}
+
+/* ---------- 插畫佔位（產圖時以 AI 插畫替換） ---------- */
+.illust-slot {
+  border: 3px dashed #a9a9a4;
+  border-radius: var(--radius-card);
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-caption);
+  text-align: center;
+  line-height: 1.6;
+  padding: 20px;
+}
+.avatar-slot {
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* ---------- 通用小工具 ---------- */
+.spacer { flex: 1; }
+.arrow-lead { font-weight: 700; }
+.divider-dotted {
+  width: 0;
+  border-left: 4px dotted var(--ink);
+  height: 40px;
+  margin-left: 44px;
+}
+
+/* ---------- C14 勾選清單 ---------- */
+.checklist { display: flex; flex-direction: column; gap: 44px; }
+.check-item { display: flex; gap: 28px; align-items: flex-start; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.check-item .mark { font-size: 46px; line-height: 1.2; }
+
+/* ---------- C15 金句引號 ---------- */
+.big-quote {
+  position: relative;
+  padding: 40px 90px;
+  font-size: var(--text-h2);
+  font-weight: 900;
+  line-height: 1.65;
+  text-align: center;
+  font-family: var(--font-head);
+}
+.big-quote::before, .big-quote::after {
+  position: absolute;
+  font-size: 130px;
+  font-family: Georgia, serif;
+  color: var(--ink);
+  line-height: 1;
+}
+.big-quote::before { content: &quot;\201C&quot;; left: 0; top: -10px; }
+.big-quote::after  { content: &quot;\201D&quot;; right: 0; bottom: -40px; }
+
+/* ---------- C16 自介卡 ---------- */
+.author-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 36px;
+  width: 100%;
+  align-items: flex-start;
+}
+.author-card .photo-slot {
+  width: 250px;
+  height: 250px;
+  border-radius: 16px;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.author-card .info { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.author-card .name { font-size: 42px; font-weight: 900; font-family: var(--font-head); }
+.author-card .bio { font-size: 27px; line-height: 1.65; color: var(--ink); }
+.author-card .follow { font-size: 27px; font-weight: 700; margin-top: 6px; }
+
+/* ---------- C17 垂直 icon 流程 ---------- */
+.icon-flow { display: flex; flex-direction: column; }
+.icon-flow .row { display: flex; align-items: center; gap: 36px; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.icon-flow .glyph { width: 100px; font-size: 64px; text-align: center; flex-shrink: 0; }
+.icon-flow .link { border-left: 4px dashed var(--ink); height: 52px; margin-left: 50px; }
+
+/* ---------- 佔位框統一改為灰白棋盤格（20px 格，示意「待填圖」） ---------- */
+.illust-slot, .avatar-slot, .author-card .photo-slot {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%),
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  color: #8a8a85;
+  text-shadow: 0 0 6px #ffffff, 0 0 12px #ffffff;
+}
+
+/* ---------- 斷行優化：避免行尾孤字（詳見 design-tokens.md 字數預算） ---------- */
+body { line-break: strict; }
+.hero, .h1, .h2, .quote-bar, .subtitle-rule { text-wrap: balance; }
+.body, .vs-body, .case-body, .point .text, .scenario-card .lines,
+.check-item, .bubble, .cta-bar, .author-card .bio { text-wrap: pretty; }
+
+/* ---------- 方格紙底紋（格線色隨主題） ----------
+   規則（2026-07-22 定案）：暖色主題內頁「預設」帶格子紙（封面除外）；
+   灰色主題為選配（加 .grid-paper 啟用）。暖主題內頁要素底時加 .no-grid 退出。 */
+.page.grid-paper,
+.page.warm:not(.cover),
+.page.pink:not(.cover) {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-position: center top;
+}
+.page.no-grid { background-image: none !important; }
+
+/* ---------- 線框（選配，任何主題可疊 .lined）：內緣細墨線框＋頁尾隔間線 ---------- */
+.page.lined { padding: 116px 104px 168px; }
+.page.lined::before {
+  content: &quot;&quot;;
+  position: absolute;
+  inset: 44px;
+  border: 2px solid var(--ink);
+  pointer-events: none;
+}
+.page.lined::after {
+  content: &quot;&quot;;
+  position: absolute;
+  left: 44px;
+  right: 44px;
+  bottom: 122px;
+  border-top: 2px solid var(--ink);
+}
+.page.lined .footer { bottom: 72px; }
+
+/* 本組自組元件。效果好的候選回收入庫（見 SKILL.md 版型層規則） */
+
+/* 雙行封面標題（L1b 規格：88px） */
+.hero2 { font-size: 88px; font-weight: 900; line-height: 1.3; letter-spacing: .02em; font-family: var(--font-head); text-wrap: balance; }
+
+/* C1 句級螢光筆的獨立行版本 */
+.hl-line {
+  display: inline-block; background: var(--highlight);
+  padding: .08em .35em; border-radius: 8px;
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+}
+
+/* 翻頁引導句 */
+.bridge { font-size: var(--text-caption); font-weight: 700; color: var(--ink-soft); letter-spacing: .06em; }
+
+/* 直欄式案例卡（L8 變體：第一行加大） */
+.case-col {
+  background: var(--bg-card); border-radius: var(--radius-card);
+  padding: var(--card-pad) 56px; width: 100%;
+  display: flex; flex-direction: column; gap: 20px; text-align: left;
+}
+.case-col .first-line {
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  display: flex; align-items: center; gap: 24px;
+}
+.case-col .first-line .num-circle { width: 72px; height: 72px; font-size: 40px; }
+.case-col .row {
+  font-size: 40px; font-weight: 700; line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  display: flex; align-items: baseline; gap: 18px;
+}
+.case-col .row .mk { font-size: 36px; }
+
+.page.dense { gap: 34px; }
+.page.dense .case-col { padding: 32px 56px; gap: 16px; }
+.cta-bar .ico { font-size: 52px; line-height: 1; }
+
+/* 實畫圓餅圖（插畫位由 SVG 實作） */
+svg.pie { display: block; }
+svg.pie text { font-family: var(--font-head); font-weight: 900; fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+svg.pie .pie-bg { fill: var(--bg-card); }
+svg.pie .ring { fill: none; stroke: var(--ink); stroke-width: 7; }
+svg.pie .spoke { stroke: var(--ink); stroke-width: 6; }
+svg.pie .marker { stroke: var(--highlight); stroke-width: 96; stroke-linecap: round; opacity: .5; }
+
+&lt;/style&gt;
+&lt;style&gt;body{padding:0;background:transparent;display:block;}&lt;/style&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;page center grid-paper&quot;&gt;
+  &lt;div class=&quot;h1&quot;&gt;先熱身一下&lt;/div&gt;
+  &lt;div class=&quot;caption&quot;&gt;STEP 1 / 八個格子，一個空格&lt;/div&gt;
+  &lt;svg class=&quot;pie&quot; width=&quot;620&quot; height=&quot;620&quot; viewBox=&quot;0 0 720 720&quot; role=&quot;img&quot; aria-label=&quot;八格圓餅圖題目&quot;&gt;
+      &lt;circle class=&quot;pie-bg&quot; cx=&quot;360&quot; cy=&quot;360&quot; r=&quot;330&quot;/&gt;
+      &lt;circle class=&quot;ring&quot; cx=&quot;360&quot; cy=&quot;360&quot; r=&quot;330&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;360&quot; y1=&quot;30&quot; x2=&quot;360&quot; y2=&quot;690&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;593.3&quot; y1=&quot;126.7&quot; x2=&quot;126.7&quot; y2=&quot;593.3&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;690&quot; y1=&quot;360&quot; x2=&quot;30&quot; y2=&quot;360&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;593.3&quot; y1=&quot;593.3&quot; x2=&quot;126.7&quot; y2=&quot;126.7&quot;/&gt;
+      &lt;text x=&quot;446&quot; y=&quot;152&quot; font-size=&quot;76&quot;&gt;2&lt;/text&gt;
+      &lt;text x=&quot;568&quot; y=&quot;274&quot; font-size=&quot;76&quot;&gt;7&lt;/text&gt;
+      &lt;text x=&quot;568&quot; y=&quot;446&quot; font-size=&quot;76&quot;&gt;81&lt;/text&gt;
+      &lt;text x=&quot;446&quot; y=&quot;568&quot; font-size=&quot;76&quot;&gt;3&lt;/text&gt;
+      &lt;text x=&quot;274&quot; y=&quot;568&quot; font-size=&quot;76&quot;&gt;4&lt;/text&gt;
+      &lt;text x=&quot;152&quot; y=&quot;446&quot; font-size=&quot;76&quot;&gt;49&lt;/text&gt;
+      &lt;text x=&quot;152&quot; y=&quot;274&quot; font-size=&quot;76&quot;&gt;9&lt;/text&gt;
+      
+    &lt;/svg&gt;
+  &lt;div class=&quot;body&quot;&gt;空格&lt;span class=&quot;hl&quot;&gt;該填幾&lt;/span&gt;？給你 30 秒&lt;br&gt;大部分人會順時針找規律，但⋯⋯&lt;/div&gt;
+  &lt;div class=&quot;bridge&quot;&gt;有答案了嗎？下一頁對答案 →&lt;/div&gt;
+  &lt;div class=&quot;footer&quot;&gt;IG @uncle.johs&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe></div><span class="label">02 · L3 熱身出題</span></div>
+<div class="thumb"><div class="frame-wrap"><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;P3 揭答 L3&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;themes/themes.css&quot;&gt;
+&lt;style&gt;
+/* ============================================
+   排版小幫手 design tokens
+   單一事實來源：../../design-tokens.md
+   色值：2026-07-22 依使用者提供之成品合成圖視覺精校，
+   第六步重製驗證時再微調。
+   ============================================ */
+
+/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
+   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  /* 基底色 */
+  /* 主題色（--bg-page/--bg-cover/--grid-line）已模組化：見 themes/ 目錄，頁面需連結 themes.css */
+  --bg-card: #ffffff;
+  --bg-cream: #f6f0df;
+  --ink: #1b1b19;
+  --ink-soft: #55554f;
+
+  /* 強調色（全系列唯一） */
+  --highlight: #f7e94e;
+
+  /* 插畫限定色：只給插畫與 icon，不進版式 */
+  --illust-skin: #f2e3d5;
+  --illust-hair: #6b5647;
+  --illust-red: #e8626d;
+  --illust-tan: #d9a662;
+
+  /* 字型 */
+  --font-head: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+  --font-body: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+
+  /* 字級（1080 寬基準） */
+  --text-hero: 128px;
+  --text-h1: 76px;
+  --text-h2: 48px;
+  --text-body: 38px;
+  --text-caption: 30px;
+  --text-footer: 26px;
+
+  /* 間距與圓角 */
+  --page-pad: 72px;
+  --block-gap: 48px;
+  --card-pad: 40px;
+  --card-gap: 32px;
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --border-w: 3px;
+  --quote-bar-w: 10px;
+}
+
+/* ============================================
+   主題：螢光筆灰色（預設）
+   定位：思考、理性、知識類
+   啟用：class=&quot;page&quot;（不加任何主題 class 即此主題）
+   內頁 #EAEAE8 淺暖灰｜封面 #D2D2CE 銀灰｜格線 墨色 5.5%（選配）
+   ============================================ */
+:root {
+  --bg-page: #eaeae8;
+  --bg-cover: #d2d2ce;
+  --grid-line: rgba(27, 27, 25, 0.055);
+}
+
+/* ============================================
+   主題：螢光粉色（rhode 取向，2026-07-22 轉正）
+   定位：兩性、感情、輕生活類
+   啟用：class=&quot;page pink&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #F1E4E2 淺腮紅｜封面 #D6ACAC 乾燥玫瑰｜格線 玫瑰褐 9%
+   ============================================ */
+.page.pink {
+  --bg-page: #f1e4e2;
+  --bg-cover: #d6acac;
+  --grid-line: rgba(153, 92, 97, 0.09);
+}
+
+/* ============================================
+   主題：螢光暖色
+   定位：生活感、情感、儀式類
+   啟用：class=&quot;page warm&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #EFEAE2 暖象牙｜封面 #D8D1C6 greige｜格線 暖褐 8%
+   ============================================ */
+.page.warm {
+  --bg-page: #efeae2;
+  --bg-cover: #d8d1c6;
+  --grid-line: rgba(93, 78, 62, 0.08);
+}
+
+/* ============================================
+   排版小幫手 base：頁面骨架 + C1~C13 元件
+   元件規格：../../components.md
+   ============================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #cfcfcd; /* 預覽用外框色，截圖時只取 .page */
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+/* ---------- 頁面畫布 1080×1350 ---------- */
+.page {
+  width: 1080px;
+  height: 1350px;
+  background: var(--bg-page);
+  padding: var(--page-pad);
+  padding-bottom: 120px; /* 頁尾保留區 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--block-gap);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.page.center { align-items: center; text-align: center; }
+.page.cover { background: var(--bg-cover); }
+
+/* ---------- 文字層級 ---------- */
+.hero  { font-size: var(--text-hero); font-weight: 900; line-height: 1.25; letter-spacing: 0.02em; font-family: var(--font-head); }
+.h1    { font-size: var(--text-h1);   font-weight: 900; line-height: 1.3;  letter-spacing: 0.02em; font-family: var(--font-head); }
+.h2    { font-size: var(--text-h2);   font-weight: 700; line-height: 1.4;  font-family: var(--font-head); }
+.body  { font-size: var(--text-body); font-weight: 500; line-height: 1.6;  letter-spacing: 0.05em; }
+.caption { font-size: var(--text-caption); font-weight: 500; line-height: 1.5; color: var(--ink-soft); }
+
+/* ---------- C1 螢光筆 ---------- */
+.hl {
+  background: var(--highlight);
+  padding: 0.02em 0.1em;
+  border-radius: 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ---------- C2 系列標籤 ---------- */
+.series-pill {
+  align-self: center;
+  background: var(--ink);
+  color: var(--bg-page);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  padding: 12px 36px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.15em;
+}
+
+/* ---------- C3 副標分隔線 ---------- */
+.subtitle-rule {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  justify-content: center;
+  font-size: var(--text-h2);
+  font-weight: 700;
+  width: 100%;
+}
+.subtitle-rule::before,
+.subtitle-rule::after {
+  content: &quot;&quot;;
+  flex: 1;
+  max-width: 130px;
+  border-top: var(--border-w) solid var(--ink);
+}
+
+/* ---------- C4 對話框 ---------- */
+.bubble {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 20px 32px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  position: relative;
+  width: fit-content;
+}
+.bubble::after {
+  content: &quot;&quot;;
+  position: absolute;
+  bottom: -18px;
+  left: 48px;
+  border: 12px solid transparent;
+  border-top-color: var(--ink);
+}
+.bubble.tail-right::after { left: auto; right: 48px; }
+
+/* ---------- C5 情境卡 ---------- */
+.scenario-card {
+  background: var(--bg-cream);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.scenario-card .avatar { flex-shrink: 0; }
+.scenario-card .lines { display: flex; flex-direction: column; gap: 18px; font-size: var(--text-body); line-height: 1.55; text-align: left; }
+
+/* ---------- C6 對照卡 ---------- */
+.versus { display: flex; gap: var(--card-gap); width: 100%; }
+.versus-card {
+  flex: 1;
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  text-align: center;
+}
+.versus-card .vs-title { font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head); }
+.versus-card .vs-body { font-size: var(--text-body); line-height: 1.6; text-align: left; }
+
+/* ---------- C7 編號圓圈 ---------- */
+.num-circle {
+  width: 88px;
+  height: 88px;
+  border: 5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  font-weight: 900;
+  font-family: var(--font-head);
+  flex-shrink: 0;
+}
+
+/* ---------- C8 引言黑線框 ---------- */
+.quote-bar {
+  border-left: var(--quote-bar-w) solid var(--ink);
+  padding: 12px 0 12px 44px;
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.55;
+  font-family: var(--font-head);
+  text-align: left;
+}
+
+/* ---------- C9 icon 三欄組 ---------- */
+.icon-trio { display: flex; width: 100%; }
+.icon-trio .col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.icon-trio .col .h2 { font-weight: 900; }
+
+/* ---------- C10 橫向流程條 ---------- */
+.flow-strip {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 28px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+.flow-strip .node { display: flex; align-items: center; gap: 16px; font-size: var(--text-caption); font-weight: 700; }
+.flow-strip .arrow { font-size: 40px; font-weight: 900; }
+
+/* ---------- C11 CTA 黃條 ---------- */
+.cta-bar {
+  background: var(--highlight);
+  border-radius: var(--radius-card);
+  padding: 32px var(--card-pad);
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: left;
+  width: 100%;
+}
+
+/* ---------- C13 頁尾 ---------- */
+.footer {
+  position: absolute;
+  bottom: 44px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: var(--text-footer);
+  color: var(--ink-soft);
+  letter-spacing: 0.08em;
+}
+
+/* ---------- 插畫佔位（產圖時以 AI 插畫替換） ---------- */
+.illust-slot {
+  border: 3px dashed #a9a9a4;
+  border-radius: var(--radius-card);
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-caption);
+  text-align: center;
+  line-height: 1.6;
+  padding: 20px;
+}
+.avatar-slot {
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* ---------- 通用小工具 ---------- */
+.spacer { flex: 1; }
+.arrow-lead { font-weight: 700; }
+.divider-dotted {
+  width: 0;
+  border-left: 4px dotted var(--ink);
+  height: 40px;
+  margin-left: 44px;
+}
+
+/* ---------- C14 勾選清單 ---------- */
+.checklist { display: flex; flex-direction: column; gap: 44px; }
+.check-item { display: flex; gap: 28px; align-items: flex-start; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.check-item .mark { font-size: 46px; line-height: 1.2; }
+
+/* ---------- C15 金句引號 ---------- */
+.big-quote {
+  position: relative;
+  padding: 40px 90px;
+  font-size: var(--text-h2);
+  font-weight: 900;
+  line-height: 1.65;
+  text-align: center;
+  font-family: var(--font-head);
+}
+.big-quote::before, .big-quote::after {
+  position: absolute;
+  font-size: 130px;
+  font-family: Georgia, serif;
+  color: var(--ink);
+  line-height: 1;
+}
+.big-quote::before { content: &quot;\201C&quot;; left: 0; top: -10px; }
+.big-quote::after  { content: &quot;\201D&quot;; right: 0; bottom: -40px; }
+
+/* ---------- C16 自介卡 ---------- */
+.author-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 36px;
+  width: 100%;
+  align-items: flex-start;
+}
+.author-card .photo-slot {
+  width: 250px;
+  height: 250px;
+  border-radius: 16px;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.author-card .info { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.author-card .name { font-size: 42px; font-weight: 900; font-family: var(--font-head); }
+.author-card .bio { font-size: 27px; line-height: 1.65; color: var(--ink); }
+.author-card .follow { font-size: 27px; font-weight: 700; margin-top: 6px; }
+
+/* ---------- C17 垂直 icon 流程 ---------- */
+.icon-flow { display: flex; flex-direction: column; }
+.icon-flow .row { display: flex; align-items: center; gap: 36px; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.icon-flow .glyph { width: 100px; font-size: 64px; text-align: center; flex-shrink: 0; }
+.icon-flow .link { border-left: 4px dashed var(--ink); height: 52px; margin-left: 50px; }
+
+/* ---------- 佔位框統一改為灰白棋盤格（20px 格，示意「待填圖」） ---------- */
+.illust-slot, .avatar-slot, .author-card .photo-slot {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%),
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  color: #8a8a85;
+  text-shadow: 0 0 6px #ffffff, 0 0 12px #ffffff;
+}
+
+/* ---------- 斷行優化：避免行尾孤字（詳見 design-tokens.md 字數預算） ---------- */
+body { line-break: strict; }
+.hero, .h1, .h2, .quote-bar, .subtitle-rule { text-wrap: balance; }
+.body, .vs-body, .case-body, .point .text, .scenario-card .lines,
+.check-item, .bubble, .cta-bar, .author-card .bio { text-wrap: pretty; }
+
+/* ---------- 方格紙底紋（格線色隨主題） ----------
+   規則（2026-07-22 定案）：暖色主題內頁「預設」帶格子紙（封面除外）；
+   灰色主題為選配（加 .grid-paper 啟用）。暖主題內頁要素底時加 .no-grid 退出。 */
+.page.grid-paper,
+.page.warm:not(.cover),
+.page.pink:not(.cover) {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-position: center top;
+}
+.page.no-grid { background-image: none !important; }
+
+/* ---------- 線框（選配，任何主題可疊 .lined）：內緣細墨線框＋頁尾隔間線 ---------- */
+.page.lined { padding: 116px 104px 168px; }
+.page.lined::before {
+  content: &quot;&quot;;
+  position: absolute;
+  inset: 44px;
+  border: 2px solid var(--ink);
+  pointer-events: none;
+}
+.page.lined::after {
+  content: &quot;&quot;;
+  position: absolute;
+  left: 44px;
+  right: 44px;
+  bottom: 122px;
+  border-top: 2px solid var(--ink);
+}
+.page.lined .footer { bottom: 72px; }
+
+/* 本組自組元件。效果好的候選回收入庫（見 SKILL.md 版型層規則） */
+
+/* 雙行封面標題（L1b 規格：88px） */
+.hero2 { font-size: 88px; font-weight: 900; line-height: 1.3; letter-spacing: .02em; font-family: var(--font-head); text-wrap: balance; }
+
+/* C1 句級螢光筆的獨立行版本 */
+.hl-line {
+  display: inline-block; background: var(--highlight);
+  padding: .08em .35em; border-radius: 8px;
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+}
+
+/* 翻頁引導句 */
+.bridge { font-size: var(--text-caption); font-weight: 700; color: var(--ink-soft); letter-spacing: .06em; }
+
+/* 直欄式案例卡（L8 變體：第一行加大） */
+.case-col {
+  background: var(--bg-card); border-radius: var(--radius-card);
+  padding: var(--card-pad) 56px; width: 100%;
+  display: flex; flex-direction: column; gap: 20px; text-align: left;
+}
+.case-col .first-line {
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  display: flex; align-items: center; gap: 24px;
+}
+.case-col .first-line .num-circle { width: 72px; height: 72px; font-size: 40px; }
+.case-col .row {
+  font-size: 40px; font-weight: 700; line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  display: flex; align-items: baseline; gap: 18px;
+}
+.case-col .row .mk { font-size: 36px; }
+
+.page.dense { gap: 34px; }
+.page.dense .case-col { padding: 32px 56px; gap: 16px; }
+.cta-bar .ico { font-size: 52px; line-height: 1; }
+
+/* 實畫圓餅圖（插畫位由 SVG 實作） */
+svg.pie { display: block; }
+svg.pie text { font-family: var(--font-head); font-weight: 900; fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+svg.pie .pie-bg { fill: var(--bg-card); }
+svg.pie .ring { fill: none; stroke: var(--ink); stroke-width: 7; }
+svg.pie .spoke { stroke: var(--ink); stroke-width: 6; }
+svg.pie .marker { stroke: var(--highlight); stroke-width: 96; stroke-linecap: round; opacity: .5; }
+
+&lt;/style&gt;
+&lt;style&gt;body{padding:0;background:transparent;display:block;}&lt;/style&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;page center&quot;&gt;
+  &lt;div class=&quot;h1&quot; style=&quot;font-size: 64px;&quot;&gt;關鍵線索其實不是順序，&lt;br&gt;而是&lt;span class=&quot;hl&quot;&gt;「對面的」&lt;/span&gt;那個數字&lt;/div&gt;
+  &lt;svg class=&quot;pie&quot; width=&quot;580&quot; height=&quot;580&quot; viewBox=&quot;0 0 720 720&quot; role=&quot;img&quot; aria-label=&quot;八格圓餅圖解答，對角線以螢光筆標出&quot;&gt;
+      &lt;circle class=&quot;pie-bg&quot; cx=&quot;360&quot; cy=&quot;360&quot; r=&quot;330&quot;/&gt;
+      &lt;line class=&quot;marker&quot; x1=&quot;446&quot; y1=&quot;152&quot; x2=&quot;274&quot; y2=&quot;568&quot;/&gt;
+      &lt;line class=&quot;marker&quot; x1=&quot;568&quot; y1=&quot;274&quot; x2=&quot;152&quot; y2=&quot;446&quot;/&gt;
+      &lt;line class=&quot;marker&quot; x1=&quot;152&quot; y1=&quot;274&quot; x2=&quot;568&quot; y2=&quot;446&quot;/&gt;
+      &lt;line class=&quot;marker&quot; x1=&quot;274&quot; y1=&quot;152&quot; x2=&quot;446&quot; y2=&quot;568&quot;/&gt;
+      &lt;circle class=&quot;ring&quot; cx=&quot;360&quot; cy=&quot;360&quot; r=&quot;330&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;360&quot; y1=&quot;30&quot; x2=&quot;360&quot; y2=&quot;690&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;593.3&quot; y1=&quot;126.7&quot; x2=&quot;126.7&quot; y2=&quot;593.3&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;690&quot; y1=&quot;360&quot; x2=&quot;30&quot; y2=&quot;360&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;593.3&quot; y1=&quot;593.3&quot; x2=&quot;126.7&quot; y2=&quot;126.7&quot;/&gt;
+      &lt;text x=&quot;446&quot; y=&quot;152&quot; font-size=&quot;76&quot;&gt;2&lt;/text&gt;
+      &lt;text x=&quot;568&quot; y=&quot;274&quot; font-size=&quot;76&quot;&gt;7&lt;/text&gt;
+      &lt;text x=&quot;568&quot; y=&quot;446&quot; font-size=&quot;76&quot;&gt;81&lt;/text&gt;
+      &lt;text x=&quot;446&quot; y=&quot;568&quot; font-size=&quot;76&quot;&gt;3&lt;/text&gt;
+      &lt;text x=&quot;274&quot; y=&quot;568&quot; font-size=&quot;76&quot;&gt;4&lt;/text&gt;
+      &lt;text x=&quot;152&quot; y=&quot;446&quot; font-size=&quot;76&quot;&gt;49&lt;/text&gt;
+      &lt;text x=&quot;152&quot; y=&quot;274&quot; font-size=&quot;76&quot;&gt;9&lt;/text&gt;
+      &lt;text x=&quot;274&quot; y=&quot;152&quot; font-size=&quot;76&quot;&gt;9&lt;/text&gt;
+    &lt;/svg&gt;
+  &lt;div class=&quot;body&quot;&gt;2↔4　7↔49　9↔81&lt;br&gt;對面那格，就是自己的平方&lt;/div&gt;
+  &lt;div&gt;&lt;span class=&quot;hl-line&quot;&gt;所以 3 的對面，填 9&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;footer&quot;&gt;IG @uncle.johs&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe></div><span class="label">03 · L3 揭答</span></div>
+<div class="thumb"><div class="frame-wrap"><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;P4 正題 L3&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;themes/themes.css&quot;&gt;
+&lt;style&gt;
+/* ============================================
+   排版小幫手 design tokens
+   單一事實來源：../../design-tokens.md
+   色值：2026-07-22 依使用者提供之成品合成圖視覺精校，
+   第六步重製驗證時再微調。
+   ============================================ */
+
+/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
+   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  /* 基底色 */
+  /* 主題色（--bg-page/--bg-cover/--grid-line）已模組化：見 themes/ 目錄，頁面需連結 themes.css */
+  --bg-card: #ffffff;
+  --bg-cream: #f6f0df;
+  --ink: #1b1b19;
+  --ink-soft: #55554f;
+
+  /* 強調色（全系列唯一） */
+  --highlight: #f7e94e;
+
+  /* 插畫限定色：只給插畫與 icon，不進版式 */
+  --illust-skin: #f2e3d5;
+  --illust-hair: #6b5647;
+  --illust-red: #e8626d;
+  --illust-tan: #d9a662;
+
+  /* 字型 */
+  --font-head: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+  --font-body: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+
+  /* 字級（1080 寬基準） */
+  --text-hero: 128px;
+  --text-h1: 76px;
+  --text-h2: 48px;
+  --text-body: 38px;
+  --text-caption: 30px;
+  --text-footer: 26px;
+
+  /* 間距與圓角 */
+  --page-pad: 72px;
+  --block-gap: 48px;
+  --card-pad: 40px;
+  --card-gap: 32px;
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --border-w: 3px;
+  --quote-bar-w: 10px;
+}
+
+/* ============================================
+   主題：螢光筆灰色（預設）
+   定位：思考、理性、知識類
+   啟用：class=&quot;page&quot;（不加任何主題 class 即此主題）
+   內頁 #EAEAE8 淺暖灰｜封面 #D2D2CE 銀灰｜格線 墨色 5.5%（選配）
+   ============================================ */
+:root {
+  --bg-page: #eaeae8;
+  --bg-cover: #d2d2ce;
+  --grid-line: rgba(27, 27, 25, 0.055);
+}
+
+/* ============================================
+   主題：螢光粉色（rhode 取向，2026-07-22 轉正）
+   定位：兩性、感情、輕生活類
+   啟用：class=&quot;page pink&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #F1E4E2 淺腮紅｜封面 #D6ACAC 乾燥玫瑰｜格線 玫瑰褐 9%
+   ============================================ */
+.page.pink {
+  --bg-page: #f1e4e2;
+  --bg-cover: #d6acac;
+  --grid-line: rgba(153, 92, 97, 0.09);
+}
+
+/* ============================================
+   主題：螢光暖色
+   定位：生活感、情感、儀式類
+   啟用：class=&quot;page warm&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #EFEAE2 暖象牙｜封面 #D8D1C6 greige｜格線 暖褐 8%
+   ============================================ */
+.page.warm {
+  --bg-page: #efeae2;
+  --bg-cover: #d8d1c6;
+  --grid-line: rgba(93, 78, 62, 0.08);
+}
+
+/* ============================================
+   排版小幫手 base：頁面骨架 + C1~C13 元件
+   元件規格：../../components.md
+   ============================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #cfcfcd; /* 預覽用外框色，截圖時只取 .page */
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+/* ---------- 頁面畫布 1080×1350 ---------- */
+.page {
+  width: 1080px;
+  height: 1350px;
+  background: var(--bg-page);
+  padding: var(--page-pad);
+  padding-bottom: 120px; /* 頁尾保留區 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--block-gap);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.page.center { align-items: center; text-align: center; }
+.page.cover { background: var(--bg-cover); }
+
+/* ---------- 文字層級 ---------- */
+.hero  { font-size: var(--text-hero); font-weight: 900; line-height: 1.25; letter-spacing: 0.02em; font-family: var(--font-head); }
+.h1    { font-size: var(--text-h1);   font-weight: 900; line-height: 1.3;  letter-spacing: 0.02em; font-family: var(--font-head); }
+.h2    { font-size: var(--text-h2);   font-weight: 700; line-height: 1.4;  font-family: var(--font-head); }
+.body  { font-size: var(--text-body); font-weight: 500; line-height: 1.6;  letter-spacing: 0.05em; }
+.caption { font-size: var(--text-caption); font-weight: 500; line-height: 1.5; color: var(--ink-soft); }
+
+/* ---------- C1 螢光筆 ---------- */
+.hl {
+  background: var(--highlight);
+  padding: 0.02em 0.1em;
+  border-radius: 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ---------- C2 系列標籤 ---------- */
+.series-pill {
+  align-self: center;
+  background: var(--ink);
+  color: var(--bg-page);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  padding: 12px 36px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.15em;
+}
+
+/* ---------- C3 副標分隔線 ---------- */
+.subtitle-rule {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  justify-content: center;
+  font-size: var(--text-h2);
+  font-weight: 700;
+  width: 100%;
+}
+.subtitle-rule::before,
+.subtitle-rule::after {
+  content: &quot;&quot;;
+  flex: 1;
+  max-width: 130px;
+  border-top: var(--border-w) solid var(--ink);
+}
+
+/* ---------- C4 對話框 ---------- */
+.bubble {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 20px 32px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  position: relative;
+  width: fit-content;
+}
+.bubble::after {
+  content: &quot;&quot;;
+  position: absolute;
+  bottom: -18px;
+  left: 48px;
+  border: 12px solid transparent;
+  border-top-color: var(--ink);
+}
+.bubble.tail-right::after { left: auto; right: 48px; }
+
+/* ---------- C5 情境卡 ---------- */
+.scenario-card {
+  background: var(--bg-cream);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.scenario-card .avatar { flex-shrink: 0; }
+.scenario-card .lines { display: flex; flex-direction: column; gap: 18px; font-size: var(--text-body); line-height: 1.55; text-align: left; }
+
+/* ---------- C6 對照卡 ---------- */
+.versus { display: flex; gap: var(--card-gap); width: 100%; }
+.versus-card {
+  flex: 1;
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  text-align: center;
+}
+.versus-card .vs-title { font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head); }
+.versus-card .vs-body { font-size: var(--text-body); line-height: 1.6; text-align: left; }
+
+/* ---------- C7 編號圓圈 ---------- */
+.num-circle {
+  width: 88px;
+  height: 88px;
+  border: 5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  font-weight: 900;
+  font-family: var(--font-head);
+  flex-shrink: 0;
+}
+
+/* ---------- C8 引言黑線框 ---------- */
+.quote-bar {
+  border-left: var(--quote-bar-w) solid var(--ink);
+  padding: 12px 0 12px 44px;
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.55;
+  font-family: var(--font-head);
+  text-align: left;
+}
+
+/* ---------- C9 icon 三欄組 ---------- */
+.icon-trio { display: flex; width: 100%; }
+.icon-trio .col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.icon-trio .col .h2 { font-weight: 900; }
+
+/* ---------- C10 橫向流程條 ---------- */
+.flow-strip {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 28px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+.flow-strip .node { display: flex; align-items: center; gap: 16px; font-size: var(--text-caption); font-weight: 700; }
+.flow-strip .arrow { font-size: 40px; font-weight: 900; }
+
+/* ---------- C11 CTA 黃條 ---------- */
+.cta-bar {
+  background: var(--highlight);
+  border-radius: var(--radius-card);
+  padding: 32px var(--card-pad);
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: left;
+  width: 100%;
+}
+
+/* ---------- C13 頁尾 ---------- */
+.footer {
+  position: absolute;
+  bottom: 44px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: var(--text-footer);
+  color: var(--ink-soft);
+  letter-spacing: 0.08em;
+}
+
+/* ---------- 插畫佔位（產圖時以 AI 插畫替換） ---------- */
+.illust-slot {
+  border: 3px dashed #a9a9a4;
+  border-radius: var(--radius-card);
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-caption);
+  text-align: center;
+  line-height: 1.6;
+  padding: 20px;
+}
+.avatar-slot {
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* ---------- 通用小工具 ---------- */
+.spacer { flex: 1; }
+.arrow-lead { font-weight: 700; }
+.divider-dotted {
+  width: 0;
+  border-left: 4px dotted var(--ink);
+  height: 40px;
+  margin-left: 44px;
+}
+
+/* ---------- C14 勾選清單 ---------- */
+.checklist { display: flex; flex-direction: column; gap: 44px; }
+.check-item { display: flex; gap: 28px; align-items: flex-start; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.check-item .mark { font-size: 46px; line-height: 1.2; }
+
+/* ---------- C15 金句引號 ---------- */
+.big-quote {
+  position: relative;
+  padding: 40px 90px;
+  font-size: var(--text-h2);
+  font-weight: 900;
+  line-height: 1.65;
+  text-align: center;
+  font-family: var(--font-head);
+}
+.big-quote::before, .big-quote::after {
+  position: absolute;
+  font-size: 130px;
+  font-family: Georgia, serif;
+  color: var(--ink);
+  line-height: 1;
+}
+.big-quote::before { content: &quot;\201C&quot;; left: 0; top: -10px; }
+.big-quote::after  { content: &quot;\201D&quot;; right: 0; bottom: -40px; }
+
+/* ---------- C16 自介卡 ---------- */
+.author-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 36px;
+  width: 100%;
+  align-items: flex-start;
+}
+.author-card .photo-slot {
+  width: 250px;
+  height: 250px;
+  border-radius: 16px;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.author-card .info { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.author-card .name { font-size: 42px; font-weight: 900; font-family: var(--font-head); }
+.author-card .bio { font-size: 27px; line-height: 1.65; color: var(--ink); }
+.author-card .follow { font-size: 27px; font-weight: 700; margin-top: 6px; }
+
+/* ---------- C17 垂直 icon 流程 ---------- */
+.icon-flow { display: flex; flex-direction: column; }
+.icon-flow .row { display: flex; align-items: center; gap: 36px; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.icon-flow .glyph { width: 100px; font-size: 64px; text-align: center; flex-shrink: 0; }
+.icon-flow .link { border-left: 4px dashed var(--ink); height: 52px; margin-left: 50px; }
+
+/* ---------- 佔位框統一改為灰白棋盤格（20px 格，示意「待填圖」） ---------- */
+.illust-slot, .avatar-slot, .author-card .photo-slot {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%),
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  color: #8a8a85;
+  text-shadow: 0 0 6px #ffffff, 0 0 12px #ffffff;
+}
+
+/* ---------- 斷行優化：避免行尾孤字（詳見 design-tokens.md 字數預算） ---------- */
+body { line-break: strict; }
+.hero, .h1, .h2, .quote-bar, .subtitle-rule { text-wrap: balance; }
+.body, .vs-body, .case-body, .point .text, .scenario-card .lines,
+.check-item, .bubble, .cta-bar, .author-card .bio { text-wrap: pretty; }
+
+/* ---------- 方格紙底紋（格線色隨主題） ----------
+   規則（2026-07-22 定案）：暖色主題內頁「預設」帶格子紙（封面除外）；
+   灰色主題為選配（加 .grid-paper 啟用）。暖主題內頁要素底時加 .no-grid 退出。 */
+.page.grid-paper,
+.page.warm:not(.cover),
+.page.pink:not(.cover) {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-position: center top;
+}
+.page.no-grid { background-image: none !important; }
+
+/* ---------- 線框（選配，任何主題可疊 .lined）：內緣細墨線框＋頁尾隔間線 ---------- */
+.page.lined { padding: 116px 104px 168px; }
+.page.lined::before {
+  content: &quot;&quot;;
+  position: absolute;
+  inset: 44px;
+  border: 2px solid var(--ink);
+  pointer-events: none;
+}
+.page.lined::after {
+  content: &quot;&quot;;
+  position: absolute;
+  left: 44px;
+  right: 44px;
+  bottom: 122px;
+  border-top: 2px solid var(--ink);
+}
+.page.lined .footer { bottom: 72px; }
+
+/* 本組自組元件。效果好的候選回收入庫（見 SKILL.md 版型層規則） */
+
+/* 雙行封面標題（L1b 規格：88px） */
+.hero2 { font-size: 88px; font-weight: 900; line-height: 1.3; letter-spacing: .02em; font-family: var(--font-head); text-wrap: balance; }
+
+/* C1 句級螢光筆的獨立行版本 */
+.hl-line {
+  display: inline-block; background: var(--highlight);
+  padding: .08em .35em; border-radius: 8px;
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+}
+
+/* 翻頁引導句 */
+.bridge { font-size: var(--text-caption); font-weight: 700; color: var(--ink-soft); letter-spacing: .06em; }
+
+/* 直欄式案例卡（L8 變體：第一行加大） */
+.case-col {
+  background: var(--bg-card); border-radius: var(--radius-card);
+  padding: var(--card-pad) 56px; width: 100%;
+  display: flex; flex-direction: column; gap: 20px; text-align: left;
+}
+.case-col .first-line {
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  display: flex; align-items: center; gap: 24px;
+}
+.case-col .first-line .num-circle { width: 72px; height: 72px; font-size: 40px; }
+.case-col .row {
+  font-size: 40px; font-weight: 700; line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  display: flex; align-items: baseline; gap: 18px;
+}
+.case-col .row .mk { font-size: 36px; }
+
+.page.dense { gap: 34px; }
+.page.dense .case-col { padding: 32px 56px; gap: 16px; }
+.cta-bar .ico { font-size: 52px; line-height: 1; }
+
+/* 實畫圓餅圖（插畫位由 SVG 實作） */
+svg.pie { display: block; }
+svg.pie text { font-family: var(--font-head); font-weight: 900; fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+svg.pie .pie-bg { fill: var(--bg-card); }
+svg.pie .ring { fill: none; stroke: var(--ink); stroke-width: 7; }
+svg.pie .spoke { stroke: var(--ink); stroke-width: 6; }
+svg.pie .marker { stroke: var(--highlight); stroke-width: 96; stroke-linecap: round; opacity: .5; }
+
+&lt;/style&gt;
+&lt;style&gt;body{padding:0;background:transparent;display:block;}&lt;/style&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;page center&quot;&gt;
+  &lt;div class=&quot;h1&quot; style=&quot;font-size: 64px;&quot;&gt;接下來的這題，&lt;span class=&quot;hl&quot;&gt;有點難&lt;/span&gt;&lt;br&gt;空格中，該填入哪個數字&lt;/div&gt;
+  &lt;div class=&quot;caption&quot;&gt;在 100 人中，大約只有 7 個人答對&lt;/div&gt;
+  &lt;svg class=&quot;pie&quot; width=&quot;620&quot; height=&quot;620&quot; viewBox=&quot;0 0 720 720&quot; role=&quot;img&quot; aria-label=&quot;六格圓餅圖，其中一格是問號&quot;&gt;
+      &lt;circle class=&quot;pie-bg&quot; cx=&quot;360&quot; cy=&quot;360&quot; r=&quot;330&quot;/&gt;
+      &lt;circle class=&quot;ring&quot; cx=&quot;360&quot; cy=&quot;360&quot; r=&quot;330&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;360&quot; y1=&quot;30&quot; x2=&quot;360&quot; y2=&quot;690&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;645.8&quot; y1=&quot;195&quot; x2=&quot;74.2&quot; y2=&quot;525&quot;/&gt;
+      &lt;line class=&quot;spoke&quot; x1=&quot;645.8&quot; y1=&quot;525&quot; x2=&quot;74.2&quot; y2=&quot;195&quot;/&gt;
+      
+      &lt;text x=&quot;472&quot; y=&quot;165&quot; font-size=&quot;84&quot;&gt;3&lt;/text&gt;
+      &lt;text x=&quot;585&quot; y=&quot;360&quot; font-size=&quot;84&quot;&gt;5&lt;/text&gt;
+      &lt;text x=&quot;472&quot; y=&quot;555&quot; font-size=&quot;84&quot;&gt;8&lt;/text&gt;
+      &lt;text x=&quot;248&quot; y=&quot;555&quot; font-size=&quot;84&quot;&gt;13&lt;/text&gt;
+      &lt;text x=&quot;135&quot; y=&quot;360&quot; font-size=&quot;84&quot;&gt;22&lt;/text&gt;
+      
+    &lt;/svg&gt;
+  &lt;div class=&quot;body&quot;&gt;花一點時間想，也可以截圖考朋友&lt;/div&gt;
+  &lt;div class=&quot;bridge&quot;&gt;什麼！？你只花 10 秒就算出來了，可能沒這麼簡單喔 →&lt;/div&gt;
+  &lt;div class=&quot;footer&quot;&gt;IG @uncle.johs&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe></div><span class="label">04 · L3 正題</span></div>
+<div class="thumb"><div class="frame-wrap"><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;P5 陷阱攔截 L8 變體&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;themes/themes.css&quot;&gt;
+&lt;style&gt;
+/* ============================================
+   排版小幫手 design tokens
+   單一事實來源：../../design-tokens.md
+   色值：2026-07-22 依使用者提供之成品合成圖視覺精校，
+   第六步重製驗證時再微調。
+   ============================================ */
+
+/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
+   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  /* 基底色 */
+  /* 主題色（--bg-page/--bg-cover/--grid-line）已模組化：見 themes/ 目錄，頁面需連結 themes.css */
+  --bg-card: #ffffff;
+  --bg-cream: #f6f0df;
+  --ink: #1b1b19;
+  --ink-soft: #55554f;
+
+  /* 強調色（全系列唯一） */
+  --highlight: #f7e94e;
+
+  /* 插畫限定色：只給插畫與 icon，不進版式 */
+  --illust-skin: #f2e3d5;
+  --illust-hair: #6b5647;
+  --illust-red: #e8626d;
+  --illust-tan: #d9a662;
+
+  /* 字型 */
+  --font-head: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+  --font-body: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+
+  /* 字級（1080 寬基準） */
+  --text-hero: 128px;
+  --text-h1: 76px;
+  --text-h2: 48px;
+  --text-body: 38px;
+  --text-caption: 30px;
+  --text-footer: 26px;
+
+  /* 間距與圓角 */
+  --page-pad: 72px;
+  --block-gap: 48px;
+  --card-pad: 40px;
+  --card-gap: 32px;
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --border-w: 3px;
+  --quote-bar-w: 10px;
+}
+
+/* ============================================
+   主題：螢光筆灰色（預設）
+   定位：思考、理性、知識類
+   啟用：class=&quot;page&quot;（不加任何主題 class 即此主題）
+   內頁 #EAEAE8 淺暖灰｜封面 #D2D2CE 銀灰｜格線 墨色 5.5%（選配）
+   ============================================ */
+:root {
+  --bg-page: #eaeae8;
+  --bg-cover: #d2d2ce;
+  --grid-line: rgba(27, 27, 25, 0.055);
+}
+
+/* ============================================
+   主題：螢光粉色（rhode 取向，2026-07-22 轉正）
+   定位：兩性、感情、輕生活類
+   啟用：class=&quot;page pink&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #F1E4E2 淺腮紅｜封面 #D6ACAC 乾燥玫瑰｜格線 玫瑰褐 9%
+   ============================================ */
+.page.pink {
+  --bg-page: #f1e4e2;
+  --bg-cover: #d6acac;
+  --grid-line: rgba(153, 92, 97, 0.09);
+}
+
+/* ============================================
+   主題：螢光暖色
+   定位：生活感、情感、儀式類
+   啟用：class=&quot;page warm&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #EFEAE2 暖象牙｜封面 #D8D1C6 greige｜格線 暖褐 8%
+   ============================================ */
+.page.warm {
+  --bg-page: #efeae2;
+  --bg-cover: #d8d1c6;
+  --grid-line: rgba(93, 78, 62, 0.08);
+}
+
+/* ============================================
+   排版小幫手 base：頁面骨架 + C1~C13 元件
+   元件規格：../../components.md
+   ============================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #cfcfcd; /* 預覽用外框色，截圖時只取 .page */
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+/* ---------- 頁面畫布 1080×1350 ---------- */
+.page {
+  width: 1080px;
+  height: 1350px;
+  background: var(--bg-page);
+  padding: var(--page-pad);
+  padding-bottom: 120px; /* 頁尾保留區 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--block-gap);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.page.center { align-items: center; text-align: center; }
+.page.cover { background: var(--bg-cover); }
+
+/* ---------- 文字層級 ---------- */
+.hero  { font-size: var(--text-hero); font-weight: 900; line-height: 1.25; letter-spacing: 0.02em; font-family: var(--font-head); }
+.h1    { font-size: var(--text-h1);   font-weight: 900; line-height: 1.3;  letter-spacing: 0.02em; font-family: var(--font-head); }
+.h2    { font-size: var(--text-h2);   font-weight: 700; line-height: 1.4;  font-family: var(--font-head); }
+.body  { font-size: var(--text-body); font-weight: 500; line-height: 1.6;  letter-spacing: 0.05em; }
+.caption { font-size: var(--text-caption); font-weight: 500; line-height: 1.5; color: var(--ink-soft); }
+
+/* ---------- C1 螢光筆 ---------- */
+.hl {
+  background: var(--highlight);
+  padding: 0.02em 0.1em;
+  border-radius: 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ---------- C2 系列標籤 ---------- */
+.series-pill {
+  align-self: center;
+  background: var(--ink);
+  color: var(--bg-page);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  padding: 12px 36px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.15em;
+}
+
+/* ---------- C3 副標分隔線 ---------- */
+.subtitle-rule {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  justify-content: center;
+  font-size: var(--text-h2);
+  font-weight: 700;
+  width: 100%;
+}
+.subtitle-rule::before,
+.subtitle-rule::after {
+  content: &quot;&quot;;
+  flex: 1;
+  max-width: 130px;
+  border-top: var(--border-w) solid var(--ink);
+}
+
+/* ---------- C4 對話框 ---------- */
+.bubble {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 20px 32px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  position: relative;
+  width: fit-content;
+}
+.bubble::after {
+  content: &quot;&quot;;
+  position: absolute;
+  bottom: -18px;
+  left: 48px;
+  border: 12px solid transparent;
+  border-top-color: var(--ink);
+}
+.bubble.tail-right::after { left: auto; right: 48px; }
+
+/* ---------- C5 情境卡 ---------- */
+.scenario-card {
+  background: var(--bg-cream);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.scenario-card .avatar { flex-shrink: 0; }
+.scenario-card .lines { display: flex; flex-direction: column; gap: 18px; font-size: var(--text-body); line-height: 1.55; text-align: left; }
+
+/* ---------- C6 對照卡 ---------- */
+.versus { display: flex; gap: var(--card-gap); width: 100%; }
+.versus-card {
+  flex: 1;
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  text-align: center;
+}
+.versus-card .vs-title { font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head); }
+.versus-card .vs-body { font-size: var(--text-body); line-height: 1.6; text-align: left; }
+
+/* ---------- C7 編號圓圈 ---------- */
+.num-circle {
+  width: 88px;
+  height: 88px;
+  border: 5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  font-weight: 900;
+  font-family: var(--font-head);
+  flex-shrink: 0;
+}
+
+/* ---------- C8 引言黑線框 ---------- */
+.quote-bar {
+  border-left: var(--quote-bar-w) solid var(--ink);
+  padding: 12px 0 12px 44px;
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.55;
+  font-family: var(--font-head);
+  text-align: left;
+}
+
+/* ---------- C9 icon 三欄組 ---------- */
+.icon-trio { display: flex; width: 100%; }
+.icon-trio .col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.icon-trio .col .h2 { font-weight: 900; }
+
+/* ---------- C10 橫向流程條 ---------- */
+.flow-strip {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 28px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+.flow-strip .node { display: flex; align-items: center; gap: 16px; font-size: var(--text-caption); font-weight: 700; }
+.flow-strip .arrow { font-size: 40px; font-weight: 900; }
+
+/* ---------- C11 CTA 黃條 ---------- */
+.cta-bar {
+  background: var(--highlight);
+  border-radius: var(--radius-card);
+  padding: 32px var(--card-pad);
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: left;
+  width: 100%;
+}
+
+/* ---------- C13 頁尾 ---------- */
+.footer {
+  position: absolute;
+  bottom: 44px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: var(--text-footer);
+  color: var(--ink-soft);
+  letter-spacing: 0.08em;
+}
+
+/* ---------- 插畫佔位（產圖時以 AI 插畫替換） ---------- */
+.illust-slot {
+  border: 3px dashed #a9a9a4;
+  border-radius: var(--radius-card);
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-caption);
+  text-align: center;
+  line-height: 1.6;
+  padding: 20px;
+}
+.avatar-slot {
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* ---------- 通用小工具 ---------- */
+.spacer { flex: 1; }
+.arrow-lead { font-weight: 700; }
+.divider-dotted {
+  width: 0;
+  border-left: 4px dotted var(--ink);
+  height: 40px;
+  margin-left: 44px;
+}
+
+/* ---------- C14 勾選清單 ---------- */
+.checklist { display: flex; flex-direction: column; gap: 44px; }
+.check-item { display: flex; gap: 28px; align-items: flex-start; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.check-item .mark { font-size: 46px; line-height: 1.2; }
+
+/* ---------- C15 金句引號 ---------- */
+.big-quote {
+  position: relative;
+  padding: 40px 90px;
+  font-size: var(--text-h2);
+  font-weight: 900;
+  line-height: 1.65;
+  text-align: center;
+  font-family: var(--font-head);
+}
+.big-quote::before, .big-quote::after {
+  position: absolute;
+  font-size: 130px;
+  font-family: Georgia, serif;
+  color: var(--ink);
+  line-height: 1;
+}
+.big-quote::before { content: &quot;\201C&quot;; left: 0; top: -10px; }
+.big-quote::after  { content: &quot;\201D&quot;; right: 0; bottom: -40px; }
+
+/* ---------- C16 自介卡 ---------- */
+.author-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 36px;
+  width: 100%;
+  align-items: flex-start;
+}
+.author-card .photo-slot {
+  width: 250px;
+  height: 250px;
+  border-radius: 16px;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.author-card .info { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.author-card .name { font-size: 42px; font-weight: 900; font-family: var(--font-head); }
+.author-card .bio { font-size: 27px; line-height: 1.65; color: var(--ink); }
+.author-card .follow { font-size: 27px; font-weight: 700; margin-top: 6px; }
+
+/* ---------- C17 垂直 icon 流程 ---------- */
+.icon-flow { display: flex; flex-direction: column; }
+.icon-flow .row { display: flex; align-items: center; gap: 36px; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.icon-flow .glyph { width: 100px; font-size: 64px; text-align: center; flex-shrink: 0; }
+.icon-flow .link { border-left: 4px dashed var(--ink); height: 52px; margin-left: 50px; }
+
+/* ---------- 佔位框統一改為灰白棋盤格（20px 格，示意「待填圖」） ---------- */
+.illust-slot, .avatar-slot, .author-card .photo-slot {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%),
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  color: #8a8a85;
+  text-shadow: 0 0 6px #ffffff, 0 0 12px #ffffff;
+}
+
+/* ---------- 斷行優化：避免行尾孤字（詳見 design-tokens.md 字數預算） ---------- */
+body { line-break: strict; }
+.hero, .h1, .h2, .quote-bar, .subtitle-rule { text-wrap: balance; }
+.body, .vs-body, .case-body, .point .text, .scenario-card .lines,
+.check-item, .bubble, .cta-bar, .author-card .bio { text-wrap: pretty; }
+
+/* ---------- 方格紙底紋（格線色隨主題） ----------
+   規則（2026-07-22 定案）：暖色主題內頁「預設」帶格子紙（封面除外）；
+   灰色主題為選配（加 .grid-paper 啟用）。暖主題內頁要素底時加 .no-grid 退出。 */
+.page.grid-paper,
+.page.warm:not(.cover),
+.page.pink:not(.cover) {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-position: center top;
+}
+.page.no-grid { background-image: none !important; }
+
+/* ---------- 線框（選配，任何主題可疊 .lined）：內緣細墨線框＋頁尾隔間線 ---------- */
+.page.lined { padding: 116px 104px 168px; }
+.page.lined::before {
+  content: &quot;&quot;;
+  position: absolute;
+  inset: 44px;
+  border: 2px solid var(--ink);
+  pointer-events: none;
+}
+.page.lined::after {
+  content: &quot;&quot;;
+  position: absolute;
+  left: 44px;
+  right: 44px;
+  bottom: 122px;
+  border-top: 2px solid var(--ink);
+}
+.page.lined .footer { bottom: 72px; }
+
+/* 本組自組元件。效果好的候選回收入庫（見 SKILL.md 版型層規則） */
+
+/* 雙行封面標題（L1b 規格：88px） */
+.hero2 { font-size: 88px; font-weight: 900; line-height: 1.3; letter-spacing: .02em; font-family: var(--font-head); text-wrap: balance; }
+
+/* C1 句級螢光筆的獨立行版本 */
+.hl-line {
+  display: inline-block; background: var(--highlight);
+  padding: .08em .35em; border-radius: 8px;
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+}
+
+/* 翻頁引導句 */
+.bridge { font-size: var(--text-caption); font-weight: 700; color: var(--ink-soft); letter-spacing: .06em; }
+
+/* 直欄式案例卡（L8 變體：第一行加大） */
+.case-col {
+  background: var(--bg-card); border-radius: var(--radius-card);
+  padding: var(--card-pad) 56px; width: 100%;
+  display: flex; flex-direction: column; gap: 20px; text-align: left;
+}
+.case-col .first-line {
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  display: flex; align-items: center; gap: 24px;
+}
+.case-col .first-line .num-circle { width: 72px; height: 72px; font-size: 40px; }
+.case-col .row {
+  font-size: 40px; font-weight: 700; line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  display: flex; align-items: baseline; gap: 18px;
+}
+.case-col .row .mk { font-size: 36px; }
+
+.page.dense { gap: 34px; }
+.page.dense .case-col { padding: 32px 56px; gap: 16px; }
+.cta-bar .ico { font-size: 52px; line-height: 1; }
+
+/* 實畫圓餅圖（插畫位由 SVG 實作） */
+svg.pie { display: block; }
+svg.pie text { font-family: var(--font-head); font-weight: 900; fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+svg.pie .pie-bg { fill: var(--bg-card); }
+svg.pie .ring { fill: none; stroke: var(--ink); stroke-width: 7; }
+svg.pie .spoke { stroke: var(--ink); stroke-width: 6; }
+svg.pie .marker { stroke: var(--highlight); stroke-width: 96; stroke-linecap: round; opacity: .5; }
+
+&lt;/style&gt;
+&lt;style&gt;body{padding:0;background:transparent;display:block;}&lt;/style&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;page center dense&quot;&gt;
+  &lt;div class=&quot;h1&quot; style=&quot;font-size: 64px;&quot;&gt;空格中的答案，&lt;span class=&quot;hl&quot;&gt;不是 35&lt;/span&gt;。&lt;/div&gt;
+  &lt;div class=&quot;case-col&quot;&gt;
+    &lt;div class=&quot;first-line&quot;&gt;&lt;span class=&quot;num-circle&quot;&gt;1&lt;/span&gt;你以為看到一個「費氏數列」&lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;3 + 5 = 8&lt;span class=&quot;mk&quot;&gt;✅&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;5 + 8 = 13&lt;span class=&quot;mk&quot;&gt;✅&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;8 + 13 = 21，圖上卻是 22&lt;span class=&quot;mk&quot;&gt;❌&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;body&quot; style=&quot;font-weight: 700;&quot;&gt;這是題目故意鋪好的&lt;span class=&quot;hl&quot;&gt;「陷阱規律」&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;case-col&quot;&gt;
+    &lt;div class=&quot;first-line&quot;&gt;&lt;span class=&quot;num-circle&quot;&gt;2&lt;/span&gt;真正的解法，有兩種&lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;一種，順時鐘看數字之間的變化&lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;一種，藏在對角線，和 7 有關&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div style=&quot;width: 100%; display: flex; flex-direction: column; gap: 10px;&quot;&gt;
+    &lt;div class=&quot;bridge&quot; style=&quot;text-align: right;&quot;&gt;先給你這兩個提示，不要偷偷問 AI 喔 →&lt;/div&gt;
+    &lt;div class=&quot;bridge&quot; style=&quot;text-align: left;&quot;&gt;← 回上一頁，再想想&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;footer&quot;&gt;IG @uncle.johs&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe></div><span class="label">05 · L8 變體 陷阱攔截</span></div>
+<div class="thumb"><div class="frame-wrap"><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;P6 收尾 L10 變體&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;themes/themes.css&quot;&gt;
+&lt;style&gt;
+/* ============================================
+   排版小幫手 design tokens
+   單一事實來源：../../design-tokens.md
+   色值：2026-07-22 依使用者提供之成品合成圖視覺精校，
+   第六步重製驗證時再微調。
+   ============================================ */
+
+/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
+   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  /* 基底色 */
+  /* 主題色（--bg-page/--bg-cover/--grid-line）已模組化：見 themes/ 目錄，頁面需連結 themes.css */
+  --bg-card: #ffffff;
+  --bg-cream: #f6f0df;
+  --ink: #1b1b19;
+  --ink-soft: #55554f;
+
+  /* 強調色（全系列唯一） */
+  --highlight: #f7e94e;
+
+  /* 插畫限定色：只給插畫與 icon，不進版式 */
+  --illust-skin: #f2e3d5;
+  --illust-hair: #6b5647;
+  --illust-red: #e8626d;
+  --illust-tan: #d9a662;
+
+  /* 字型 */
+  --font-head: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+  --font-body: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+
+  /* 字級（1080 寬基準） */
+  --text-hero: 128px;
+  --text-h1: 76px;
+  --text-h2: 48px;
+  --text-body: 38px;
+  --text-caption: 30px;
+  --text-footer: 26px;
+
+  /* 間距與圓角 */
+  --page-pad: 72px;
+  --block-gap: 48px;
+  --card-pad: 40px;
+  --card-gap: 32px;
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --border-w: 3px;
+  --quote-bar-w: 10px;
+}
+
+/* ============================================
+   主題：螢光筆灰色（預設）
+   定位：思考、理性、知識類
+   啟用：class=&quot;page&quot;（不加任何主題 class 即此主題）
+   內頁 #EAEAE8 淺暖灰｜封面 #D2D2CE 銀灰｜格線 墨色 5.5%（選配）
+   ============================================ */
+:root {
+  --bg-page: #eaeae8;
+  --bg-cover: #d2d2ce;
+  --grid-line: rgba(27, 27, 25, 0.055);
+}
+
+/* ============================================
+   主題：螢光粉色（rhode 取向，2026-07-22 轉正）
+   定位：兩性、感情、輕生活類
+   啟用：class=&quot;page pink&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #F1E4E2 淺腮紅｜封面 #D6ACAC 乾燥玫瑰｜格線 玫瑰褐 9%
+   ============================================ */
+.page.pink {
+  --bg-page: #f1e4e2;
+  --bg-cover: #d6acac;
+  --grid-line: rgba(153, 92, 97, 0.09);
+}
+
+/* ============================================
+   主題：螢光暖色
+   定位：生活感、情感、儀式類
+   啟用：class=&quot;page warm&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #EFEAE2 暖象牙｜封面 #D8D1C6 greige｜格線 暖褐 8%
+   ============================================ */
+.page.warm {
+  --bg-page: #efeae2;
+  --bg-cover: #d8d1c6;
+  --grid-line: rgba(93, 78, 62, 0.08);
+}
+
+/* ============================================
+   排版小幫手 base：頁面骨架 + C1~C13 元件
+   元件規格：../../components.md
+   ============================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #cfcfcd; /* 預覽用外框色，截圖時只取 .page */
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+/* ---------- 頁面畫布 1080×1350 ---------- */
+.page {
+  width: 1080px;
+  height: 1350px;
+  background: var(--bg-page);
+  padding: var(--page-pad);
+  padding-bottom: 120px; /* 頁尾保留區 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--block-gap);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.page.center { align-items: center; text-align: center; }
+.page.cover { background: var(--bg-cover); }
+
+/* ---------- 文字層級 ---------- */
+.hero  { font-size: var(--text-hero); font-weight: 900; line-height: 1.25; letter-spacing: 0.02em; font-family: var(--font-head); }
+.h1    { font-size: var(--text-h1);   font-weight: 900; line-height: 1.3;  letter-spacing: 0.02em; font-family: var(--font-head); }
+.h2    { font-size: var(--text-h2);   font-weight: 700; line-height: 1.4;  font-family: var(--font-head); }
+.body  { font-size: var(--text-body); font-weight: 500; line-height: 1.6;  letter-spacing: 0.05em; }
+.caption { font-size: var(--text-caption); font-weight: 500; line-height: 1.5; color: var(--ink-soft); }
+
+/* ---------- C1 螢光筆 ---------- */
+.hl {
+  background: var(--highlight);
+  padding: 0.02em 0.1em;
+  border-radius: 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ---------- C2 系列標籤 ---------- */
+.series-pill {
+  align-self: center;
+  background: var(--ink);
+  color: var(--bg-page);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  padding: 12px 36px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.15em;
+}
+
+/* ---------- C3 副標分隔線 ---------- */
+.subtitle-rule {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  justify-content: center;
+  font-size: var(--text-h2);
+  font-weight: 700;
+  width: 100%;
+}
+.subtitle-rule::before,
+.subtitle-rule::after {
+  content: &quot;&quot;;
+  flex: 1;
+  max-width: 130px;
+  border-top: var(--border-w) solid var(--ink);
+}
+
+/* ---------- C4 對話框 ---------- */
+.bubble {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 20px 32px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  position: relative;
+  width: fit-content;
+}
+.bubble::after {
+  content: &quot;&quot;;
+  position: absolute;
+  bottom: -18px;
+  left: 48px;
+  border: 12px solid transparent;
+  border-top-color: var(--ink);
+}
+.bubble.tail-right::after { left: auto; right: 48px; }
+
+/* ---------- C5 情境卡 ---------- */
+.scenario-card {
+  background: var(--bg-cream);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.scenario-card .avatar { flex-shrink: 0; }
+.scenario-card .lines { display: flex; flex-direction: column; gap: 18px; font-size: var(--text-body); line-height: 1.55; text-align: left; }
+
+/* ---------- C6 對照卡 ---------- */
+.versus { display: flex; gap: var(--card-gap); width: 100%; }
+.versus-card {
+  flex: 1;
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  text-align: center;
+}
+.versus-card .vs-title { font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head); }
+.versus-card .vs-body { font-size: var(--text-body); line-height: 1.6; text-align: left; }
+
+/* ---------- C7 編號圓圈 ---------- */
+.num-circle {
+  width: 88px;
+  height: 88px;
+  border: 5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  font-weight: 900;
+  font-family: var(--font-head);
+  flex-shrink: 0;
+}
+
+/* ---------- C8 引言黑線框 ---------- */
+.quote-bar {
+  border-left: var(--quote-bar-w) solid var(--ink);
+  padding: 12px 0 12px 44px;
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.55;
+  font-family: var(--font-head);
+  text-align: left;
+}
+
+/* ---------- C9 icon 三欄組 ---------- */
+.icon-trio { display: flex; width: 100%; }
+.icon-trio .col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.icon-trio .col .h2 { font-weight: 900; }
+
+/* ---------- C10 橫向流程條 ---------- */
+.flow-strip {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 28px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+.flow-strip .node { display: flex; align-items: center; gap: 16px; font-size: var(--text-caption); font-weight: 700; }
+.flow-strip .arrow { font-size: 40px; font-weight: 900; }
+
+/* ---------- C11 CTA 黃條 ---------- */
+.cta-bar {
+  background: var(--highlight);
+  border-radius: var(--radius-card);
+  padding: 32px var(--card-pad);
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: left;
+  width: 100%;
+}
+
+/* ---------- C13 頁尾 ---------- */
+.footer {
+  position: absolute;
+  bottom: 44px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: var(--text-footer);
+  color: var(--ink-soft);
+  letter-spacing: 0.08em;
+}
+
+/* ---------- 插畫佔位（產圖時以 AI 插畫替換） ---------- */
+.illust-slot {
+  border: 3px dashed #a9a9a4;
+  border-radius: var(--radius-card);
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-caption);
+  text-align: center;
+  line-height: 1.6;
+  padding: 20px;
+}
+.avatar-slot {
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* ---------- 通用小工具 ---------- */
+.spacer { flex: 1; }
+.arrow-lead { font-weight: 700; }
+.divider-dotted {
+  width: 0;
+  border-left: 4px dotted var(--ink);
+  height: 40px;
+  margin-left: 44px;
+}
+
+/* ---------- C14 勾選清單 ---------- */
+.checklist { display: flex; flex-direction: column; gap: 44px; }
+.check-item { display: flex; gap: 28px; align-items: flex-start; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.check-item .mark { font-size: 46px; line-height: 1.2; }
+
+/* ---------- C15 金句引號 ---------- */
+.big-quote {
+  position: relative;
+  padding: 40px 90px;
+  font-size: var(--text-h2);
+  font-weight: 900;
+  line-height: 1.65;
+  text-align: center;
+  font-family: var(--font-head);
+}
+.big-quote::before, .big-quote::after {
+  position: absolute;
+  font-size: 130px;
+  font-family: Georgia, serif;
+  color: var(--ink);
+  line-height: 1;
+}
+.big-quote::before { content: &quot;\201C&quot;; left: 0; top: -10px; }
+.big-quote::after  { content: &quot;\201D&quot;; right: 0; bottom: -40px; }
+
+/* ---------- C16 自介卡 ---------- */
+.author-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 36px;
+  width: 100%;
+  align-items: flex-start;
+}
+.author-card .photo-slot {
+  width: 250px;
+  height: 250px;
+  border-radius: 16px;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.author-card .info { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.author-card .name { font-size: 42px; font-weight: 900; font-family: var(--font-head); }
+.author-card .bio { font-size: 27px; line-height: 1.65; color: var(--ink); }
+.author-card .follow { font-size: 27px; font-weight: 700; margin-top: 6px; }
+
+/* ---------- C17 垂直 icon 流程 ---------- */
+.icon-flow { display: flex; flex-direction: column; }
+.icon-flow .row { display: flex; align-items: center; gap: 36px; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.icon-flow .glyph { width: 100px; font-size: 64px; text-align: center; flex-shrink: 0; }
+.icon-flow .link { border-left: 4px dashed var(--ink); height: 52px; margin-left: 50px; }
+
+/* ---------- 佔位框統一改為灰白棋盤格（20px 格，示意「待填圖」） ---------- */
+.illust-slot, .avatar-slot, .author-card .photo-slot {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%),
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  color: #8a8a85;
+  text-shadow: 0 0 6px #ffffff, 0 0 12px #ffffff;
+}
+
+/* ---------- 斷行優化：避免行尾孤字（詳見 design-tokens.md 字數預算） ---------- */
+body { line-break: strict; }
+.hero, .h1, .h2, .quote-bar, .subtitle-rule { text-wrap: balance; }
+.body, .vs-body, .case-body, .point .text, .scenario-card .lines,
+.check-item, .bubble, .cta-bar, .author-card .bio { text-wrap: pretty; }
+
+/* ---------- 方格紙底紋（格線色隨主題） ----------
+   規則（2026-07-22 定案）：暖色主題內頁「預設」帶格子紙（封面除外）；
+   灰色主題為選配（加 .grid-paper 啟用）。暖主題內頁要素底時加 .no-grid 退出。 */
+.page.grid-paper,
+.page.warm:not(.cover),
+.page.pink:not(.cover) {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-position: center top;
+}
+.page.no-grid { background-image: none !important; }
+
+/* ---------- 線框（選配，任何主題可疊 .lined）：內緣細墨線框＋頁尾隔間線 ---------- */
+.page.lined { padding: 116px 104px 168px; }
+.page.lined::before {
+  content: &quot;&quot;;
+  position: absolute;
+  inset: 44px;
+  border: 2px solid var(--ink);
+  pointer-events: none;
+}
+.page.lined::after {
+  content: &quot;&quot;;
+  position: absolute;
+  left: 44px;
+  right: 44px;
+  bottom: 122px;
+  border-top: 2px solid var(--ink);
+}
+.page.lined .footer { bottom: 72px; }
+
+/* 本組自組元件。效果好的候選回收入庫（見 SKILL.md 版型層規則） */
+
+/* 雙行封面標題（L1b 規格：88px） */
+.hero2 { font-size: 88px; font-weight: 900; line-height: 1.3; letter-spacing: .02em; font-family: var(--font-head); text-wrap: balance; }
+
+/* C1 句級螢光筆的獨立行版本 */
+.hl-line {
+  display: inline-block; background: var(--highlight);
+  padding: .08em .35em; border-radius: 8px;
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+}
+
+/* 翻頁引導句 */
+.bridge { font-size: var(--text-caption); font-weight: 700; color: var(--ink-soft); letter-spacing: .06em; }
+
+/* 直欄式案例卡（L8 變體：第一行加大） */
+.case-col {
+  background: var(--bg-card); border-radius: var(--radius-card);
+  padding: var(--card-pad) 56px; width: 100%;
+  display: flex; flex-direction: column; gap: 20px; text-align: left;
+}
+.case-col .first-line {
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  display: flex; align-items: center; gap: 24px;
+}
+.case-col .first-line .num-circle { width: 72px; height: 72px; font-size: 40px; }
+.case-col .row {
+  font-size: 40px; font-weight: 700; line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  display: flex; align-items: baseline; gap: 18px;
+}
+.case-col .row .mk { font-size: 36px; }
+
+.page.dense { gap: 34px; }
+.page.dense .case-col { padding: 32px 56px; gap: 16px; }
+.cta-bar .ico { font-size: 52px; line-height: 1; }
+
+/* 實畫圓餅圖（插畫位由 SVG 實作） */
+svg.pie { display: block; }
+svg.pie text { font-family: var(--font-head); font-weight: 900; fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+svg.pie .pie-bg { fill: var(--bg-card); }
+svg.pie .ring { fill: none; stroke: var(--ink); stroke-width: 7; }
+svg.pie .spoke { stroke: var(--ink); stroke-width: 6; }
+svg.pie .marker { stroke: var(--highlight); stroke-width: 96; stroke-linecap: round; opacity: .5; }
+
+&lt;/style&gt;
+&lt;style&gt;body{padding:0;background:transparent;display:block;}&lt;/style&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;page center&quot;&gt;
+  &lt;div class=&quot;spacer&quot;&gt;&lt;/div&gt;
+  &lt;div class=&quot;h1&quot;&gt;想不出來，其實很正常&lt;/div&gt;
+  &lt;div class=&quot;body&quot;&gt;因為這題真的有點難，&lt;br&gt;大概只有 &lt;span class=&quot;hl&quot;&gt;7%&lt;/span&gt; 的人能夠答對。&lt;/div&gt;
+
+  &lt;div style=&quot;display: flex; align-items: center; gap: 40px;&quot;&gt;
+    &lt;div class=&quot;illust-slot&quot; style=&quot;width: 200px; height: 200px; border-radius: 50%; font-size: 24px; flex-shrink: 0;&quot;&gt;本人頭像位&lt;br&gt;（真人照）&lt;/div&gt;
+    &lt;div class=&quot;body&quot; style=&quot;text-align: left;&quot;&gt;腦子的肌肉，本來就需要鍛鍊，&lt;br&gt;這只是一個邏輯思考的練習，&lt;br&gt;腦子有在動，就會越來越熟練。&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;spacer&quot;&gt;&lt;/div&gt;
+  &lt;div class=&quot;cta-bar&quot;&gt;&lt;span class=&quot;ico&quot;&gt;💬&lt;/span&gt;把你的答案打在底下留言區，不管是否答對，兩種解法我都會發送給你。&lt;/div&gt;
+  &lt;div class=&quot;caption&quot;&gt;也可以 tag 一個朋友，看誰先想通&lt;/div&gt;
+  &lt;div class=&quot;footer&quot;&gt;IG @uncle.johs&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe></div><span class="label">06 · L10 變體 收尾 CTA</span></div>
+</div>
+<script>
+var state = { theme:"gray", frame:"off", grid:"off" };
+
+function applyOne(f){
+  var d = f.contentDocument; if(!d) return;
+  var p = d.querySelector(".page"); if(!p) return;
+  p.classList.remove("warm","pink","lined","grid-paper","no-grid");
+  if(state.theme==="warm") p.classList.add("warm");
+  if(state.theme==="pink") p.classList.add("pink");
+  if(state.frame==="on") p.classList.add("lined");
+  var isCover = p.classList.contains("cover");
+  if(state.grid==="on"){ if(!isCover) p.classList.add("grid-paper"); }
+  else { p.classList.add("no-grid"); }
+}
+function applyAll(){ document.querySelectorAll("iframe").forEach(applyOne); }
+
+document.querySelectorAll(".ctl button").forEach(function(b){
+  b.addEventListener("click", function(){
+    state[b.dataset.k] = b.dataset.v;
+    document.querySelectorAll('.ctl button[data-k="'+b.dataset.k+'"]').forEach(function(x){ x.classList.remove("on"); });
+    b.classList.add("on");
+    applyAll();
+  });
+});
+document.querySelectorAll("iframe").forEach(function(f){ f.addEventListener("load", function(){ applyOne(f); }); });
+
+function rescale(){document.querySelectorAll(".frame-wrap").forEach(function(w){
+  w.querySelector("iframe").style.transform="scale("+(w.clientWidth/1080)+")";});}
+window.addEventListener("resize",rescale);window.addEventListener("load",function(){rescale();applyAll();});rescale();
+</script>
+</body></html>

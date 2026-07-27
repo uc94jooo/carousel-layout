@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>C19 岔路家族（物件標本）</title>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="../../themes/themes.css">
+<link rel="stylesheet" href="assets/base.css">
+<!-- C19 岔路家族物件標本（規格見 components.md C19）
+     本檔只展示物件本體；組頁時把物件塊複製進頁面，組裝參考任務實例庫（page-layouts.md）。
+     結構＝起點節點 → SVG 岔線 → 兩欄路徑。取捨形：沒走的路用 .ghost（灰虛線＋斷尾 ✕）；
+     分類變體：兩條路都實線。SVG 線的終點 x 對準兩欄中心（viewBox 936 寬時約 234 / 702）。
+     岔數與節點數可變，變化寫進工單。首排實例：「沒說謊的謊言」框架效應篇。 -->
+</head>
+<body>
+<div class="page center" style="justify-content: center;">
+
+  <div class="fork-wrap">
+  <div class="fork-start">客人指名要白色包</div>
+
+  <svg class="fork-svg" viewBox="0 0 936 130" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="468" y1="0" x2="234" y2="130" style="stroke: var(--ink-soft); stroke-width: 4; stroke-dasharray: 12 10;"/>
+    <line x1="468" y1="0" x2="702" y2="130" style="stroke: var(--ink); stroke-width: 5;"/>
+  </svg>
+
+  <div class="fork-cols">
+    <div class="fork-col ghost">
+      <div class="fork-label">沒走的路</div>
+      <div class="fork-node">直接說「沒貨了」</div>
+      <div class="fork-link">↓</div>
+      <div class="fork-node">客人轉身走了</div>
+      <div class="dead">✕</div>
+    </div>
+    <div class="fork-col">
+      <div class="fork-label">他走的路</div>
+      <div class="fork-node">提醒白色的缺點</div>
+      <div class="fork-link">↓</div>
+      <div class="fork-node">覺得他站在我這邊</div>
+      <div class="fork-link">↓</div>
+      <div class="fork-node">買下推薦款</div>
+    </div>
+  </div>
+  </div>
+
+</div>
+</body>
+</html>

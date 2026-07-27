@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>L12 story-annotated 敘事＋分析層頁</title>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="../../themes/themes.css">
+<link rel="stylesheet" href="assets/base.css">
+<!-- L12 敘事＋分析層頁參考實作（2026-07-27 入庫，規格見 page-layouts.md L12）
+     用法：複製本檔改內容。上半原文敘事零刪減照排（6～9 行舒適帶，不套 L3 的
+     3 行上限），下緣分析層（C9 三欄或 C18 膠囊列）把該段機制攤開。
+     分析層標籤必須寫機制不寫名詞（「強調缺點：容易髒」，不是「白色包包」）。
+     頁標可無；拆頁點跟著敘事節拍走（懸念、反諷、punchline）。
+     來源：使用者 2026-07-27 手排 Page 2（「沒說謊的謊言」框架效應篇） -->
+<style>
+  .story { display: flex; flex-direction: column; gap: 44px; text-align: left; width: 100%; }
+  .story .body { line-height: 1.75; }
+  .trio-slot { width: 172px; height: 172px; border-radius: var(--radius-card); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="h1" style="font-size: 64px;">他當時是這樣說的：</div>
+
+  <div class="story">
+    <div class="body">「白色是真的很好看沒錯，但很多客人反應太容易髒。台灣夏天濕熱，白色包容易吸附深色牛仔褲的染料，或沾到咖啡就留下印子。</div>
+    <div class="body">我建議你看看這個「<span class="hl">同款茶色</span>」，比較耐髒、是今年新色，背起來更有層次感；</div>
+    <div class="body">如果你喜歡經典一點的款式，也可以考慮同款的老花（Monogram），比較不會退流行。」</div>
+    <div class="body">客人聽了之後點點頭，<br>就買下了我朋友推薦的其中一款。</div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="icon-trio">
+    <div class="col">
+      <div class="illust-slot trio-slot">白色包包<br>正面圖</div>
+      <div class="caption">強調缺點：容易髒</div>
+    </div>
+    <div class="col">
+      <div class="illust-slot trio-slot">茶色包包<br>正面圖</div>
+      <div class="caption">對照款：不容易髒</div>
+    </div>
+    <div class="col">
+      <div class="illust-slot trio-slot">老花包包<br>正面圖</div>
+      <div class="caption">經典不敗款式</div>
+    </div>
+  </div>
+
+  <div class="footer">IG @uncle.johs</div>
+</div>
+</body>
+</html>

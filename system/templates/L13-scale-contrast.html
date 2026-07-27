@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>L13 scale-contrast 大字小字頁</title>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="../../themes/themes.css">
+<link rel="stylesheet" href="assets/base.css">
+<!-- L13 大字小字頁參考實作（2026-07-27 入庫，規格見 page-layouts.md L13）
+     用法：複製本檔改內容。宣稱句用超大字級鋪上半頁，但書句用 caption 級小字
+     縮在角落——讀者必須瞇眼湊近讀小字，頁面本身重演「放大／縮小」的取景操作。
+     但書句必須原文照錄不改寫；大小字級差至少跨兩級；與 C6b 擇一使用同一素材。
+     首排實例：「沒說謊的謊言」框架效應篇（2026-07-27） -->
+<style>
+  .claim {
+    font-size: 110px;
+    font-weight: 900;
+    font-family: var(--font-head);
+    line-height: 1.35;
+    text-align: center;
+  }
+  .fine-print {
+    align-self: flex-end;
+    max-width: 520px;
+    text-align: left;
+    font-size: 22px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+<div class="page center">
+
+  <div class="spacer"></div>
+
+  <div class="claim">「<span class="hl">不易形成<br>體脂肪</span>」</div>
+
+  <div class="spacer"></div>
+
+  <div class="fine-print">在嚴謹的營養均衡與熱量控制，以及適當的運動條件下，適量攝取本產品有助於不易形成體脂肪。</div>
+
+  <div class="body" style="text-align: center; font-weight: 700; width: 100%;">
+    大字給你看的，小字才是真的。
+  </div>
+
+  <div class="footer">IG @uncle.johs</div>
+</div>
+</body>
+</html>

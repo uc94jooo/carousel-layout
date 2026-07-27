@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>L10 summary-cta 總結行動頁</title>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="../../themes/themes.css">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+  .body-row { display: flex; gap: 44px; align-items: stretch; }
+  .body-row .points { flex: 1; }
+  .points { --circle: 88px; --pt-font: var(--text-h2); --pt-gap: 40px;
+    display: flex; flex-direction: column; gap: var(--pt-gap); position: relative; justify-content: center; }
+  .points .num-circle { width: var(--circle); height: var(--circle); font-size: calc(var(--circle) * 0.6); }
+  .points::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--circle) / 2);
+    top: calc(var(--circle) / 2);
+    bottom: calc(var(--circle) / 2);
+    border-left: 4px dotted var(--ink);
+  }
+  /* 3～6 項自動縮放 */
+  .points:has(.point:nth-child(4)) { --circle: 76px; --pt-font: 42px; --pt-gap: 32px; }
+  .points:has(.point:nth-child(5)) { --circle: 68px; --pt-font: 38px; --pt-gap: 26px; }
+  .points:has(.point:nth-child(6)) { --circle: 60px; --pt-font: 34px; --pt-gap: 22px; }
+  .point { display: flex; align-items: flex-start; gap: 36px; }
+  .point .num-circle { margin-top: -6px; position: relative; }
+  .point .text { font-size: var(--pt-font); font-weight: 700; line-height: 1.55; }
+  .point .text .lead { margin-right: 8px; }
+</style>
+</head>
+<body>
+<div class="page" style="justify-content: space-between;">
+  <div class="h1">記住這三件事就好</div>
+
+
+  <div class="body-row">
+    <div class="points">
+      <div class="point">
+        <div class="num-circle">1</div>
+        <div class="text">▸ 指標達成 ≠<br><span class="hl">「目標」</span>達成。</div>
+      </div>
+      <div class="point">
+        <div class="num-circle">2</div>
+        <div class="text">▸ 指標可以追，<br>但<span class="hl">「初衷」</span>易忘。</div>
+      </div>
+      <div class="point">
+        <div class="num-circle">3</div>
+        <div class="text">▸ 訂 KPI 之前，先問：<br>還有哪些<span class="hl">隱形指標</span>？</div>
+      </div>
+    </div>
+    <div class="illust-slot" style="width: 320px;">插畫位（可選）：<br>呼應總結的人物<br>（如思考中的人）</div>
+  </div>
+
+
+  <div class="cta-bar">
+    <span style="font-size: 56px;">💬</span>
+    <span>如果你的身邊、家人、公司裡，<br>也有訂什麼奇怪的 KPI，歡迎底下留言</span>
+  </div>
+
+  <div class="footer">IG @uncle.johs</div>
+</div>
+</body>
+</html>
