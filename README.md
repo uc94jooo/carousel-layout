@@ -4,6 +4,26 @@ IG 輪播的設計系統，目標：讓 AI 產圖／排版維持全系列一致�
 
 召喚詞：排版小幫手。`SKILL.md` 為啟動器，`system/` 為規格唯一事實來源。
 
+## 產線流程（給協作者的白話版）
+
+社群輪播圖是這樣生出來的，總共三個角色：AI、編輯人員、出圖人員。
+
+1. **AI 排草稿**：把文章交給 AI，它會先整理出一份「工單」（每一頁要放什麼字、
+   用什麼版型的清單）。⏸ 編輯人員裁決工單（可直接改工單檔或下指令），
+   確認後 AI 把它排成網頁版的草稿頁面。
+2. **編輯人員在 Keynote 定稿**：AI 把草稿轉成一份**可編輯的 Keynote／PowerPoint
+   檔**（文字都是真的文字框，點兩下就能改）。編輯人員在這裡做最後修整——改字、
+   挪位置、調留白。**這份改完的簡報檔就是最終版本**，前面的網頁草稿不用管它。
+3. **編輯人員輸出 PNG**：定稿後，用 Keynote 的「輸出至影像」批次轉出每頁 PNG。
+4. **出圖人員補插圖**：PNG 裡會有幾個**留白的插圖框，框內有一行灰字說明**
+   （例如「插圖：上課東張西望的小孩」）。把整張 PNG 丟給 ChatGPT 或 NotebookLM，
+   請它照框內說明把圖生在那個位置。
+5. **上傳社群**：補完圖的成品 PNG 就是最終交付，直接上傳。
+
+一句話總結：**AI 排到 80 分 → 編輯人員在 Keynote 改到 100 分 → Keynote 出 PNG →
+補圖 → 上線**。中途要改文字或版面，一律回 Keynote 檔改、重新輸出 PNG，
+不要直接改圖檔；也不要回頭改網頁草稿——定稿只認 Keynote 檔。
+
 三主題制：**螢光筆灰色**（預設，思考類）／**螢光暖色**（生活感類，class `warm`）／**螢光粉色**（感情輕生活類，class `pink`），定義各自獨立成檔於 `themes/`（一主題一檔，規格在檔頭註解），每組輪播擇一。輸出選配：線框（`.lined`）× 格線（`.grid-paper`／`.no-grid`；暖、粉內頁預設帶格）。
 
 ## 架構
@@ -16,7 +36,7 @@ IG 輪播的設計系統，目標：讓 AI 產圖／排版維持全系列一致�
 | [system/components.md](system/components.md) | C1～C17 元件文法（螢光筆、對照卡、自介卡…） |
 | [system/page-layouts.md](system/page-layouts.md) | L1～L11＋L1b 頁型規格＋敘事順序建議 |
 | [themes/](themes/) | 主題定義（一主題一檔） |
-| [system/templates/](system/templates/) | 版型 HTML 模板＋共用腳本：`build-board.py`（試衣間）、`export.py`（PNG 輸出）、`build-index.py`（總覽） |
+| [system/templates/](system/templates/) | 版型 HTML 模板＋共用腳本：`export-editable-pptx.py`（可編輯 PPTX，預設產線終點）、`build-board.py`（試衣間，選配）、`export.py`（HTML 直出 PNG，選配）、`build-index.py`（總覽） |
 
 ## 字體
 
