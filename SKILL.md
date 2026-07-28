@@ -36,12 +36,6 @@ description: >
 
 規格與本技能衝突時，以規格庫為準；發現規格過時，先回報使用者再動規格。
 
-## 範例預設值（examples/qipa-logic/）
-
-技能內附完整實戰範例六頁（灰色主題原始檔＋試衣間 board.html，
-board 由共用腳本 system/templates/build-board.py 組裝）。新輪播可複製此組當起點改內容，
-或作為版型、口語文案、試衣間交付格式的參考實例。
-
 ## 兩層約束：什麼能動、什麼不能動
 
 **品牌層（硬約束，任何版型都必須遵守）**：
@@ -139,9 +133,13 @@ file:// 直開，全部版型活縮圖），讓使用者裁決元件時看得到
   工單「銜接」欄在編頁階段鎖定，平行不影響；但第 5 步自檢與 board 組裝仍由
   主流程統一執行，不交給子代理分頭做
 - 填完跑 `python3 templates/build-index.py` 重建總覽頁
-- 存檔路徑：所有產出（頁面 HTML、assets/themes/fonts 複本、board.html）預設存
+- 存檔路徑：所有產出（頁面 HTML、assets/themes 複本、board.html）預設存
   `<專案根目錄>/carousel-layout/<任務或文章名稱>/`（例：`~/Claude/carousel-layout/生命之橋/`）；
   一個任務一個子資料夾，資料夾名沿用任務或文章的既有名稱，不自創新名
+- fonts 不逐專案複製（2026-07-28 定）：金萱走 tokens.css 的 `local()` 吃系統已安裝
+  字型，字型檔只在技能目錄 `system/templates/fonts/` 保留一份當備援
+- 工單存檔（2026-07-28 定）：結構化工單與人讀版工單各存一份 .md，寫入
+  `~/Documents/Obsidian Vault/_排版小幫手/<YYYY-MM-DD 專案名>/`（日期＝專案製作日）
 
 ### 第 5 步：自檢清單（品牌層檢查，逐項核）
 - [ ] 螢光筆：每頁詞級 ≤3 處、句級 ≤1 組、無第二色

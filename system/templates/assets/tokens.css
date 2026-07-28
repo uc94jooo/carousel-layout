@@ -5,23 +5,27 @@
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: "JinXuan";
-  src: url("../fonts/jf-jinxuan-extrabold.otf") format("opentype");
+  src: local("jf-jinxuan-ExtraBold"), local("jf-jinxuan ExtraBold"),
+       url("../fonts/jf-jinxuan-extrabold.otf") format("opentype");
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: "JinXuan";
-  src: url("../fonts/jf-jinxuan-bold.otf") format("opentype");
+  src: local("jf-jinxuan-Bold"), local("jf-jinxuan Bold"),
+       url("../fonts/jf-jinxuan-bold.otf") format("opentype");
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: "JinXuan";
-  src: url("../fonts/jf-jinxuan-medium.otf") format("opentype");
+  src: local("jf-jinxuan-Medium"), local("jf-jinxuan Medium"),
+       url("../fonts/jf-jinxuan-medium.otf") format("opentype");
   font-weight: 500;
   font-display: swap;
 }

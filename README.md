@@ -17,14 +17,6 @@ IG 輪播的設計系統，目標：讓 AI 產圖／排版維持全系列一致�
 | [system/page-layouts.md](system/page-layouts.md) | L1～L11＋L1b 頁型規格＋敘事順序建議 |
 | [themes/](themes/) | 主題定義（一主題一檔） |
 | [system/templates/](system/templates/) | 版型 HTML 模板＋共用腳本：`build-board.py`（試衣間）、`export.py`（PNG 輸出）、`build-index.py`（總覽） |
-| [examples/qipa-logic/](examples/qipa-logic/) | 完整實戰範例：六頁灰色主題原始檔＋互動試衣間 board.html |
-
-## 範例組（examples/qipa-logic/）
-
-- 新輪播開工時的「預設起點」：複製此資料夾、改頁面內容，版式與品牌層直接繼承
-- 版型實例：P1=L1b 雙行封面、P2~P4=L3 出題/揭答、P5=L8 變體、P6=L10 變體
-- `assets/set.css`＝「自組元件層」示範（本組專用元件與全域庫的分工方式）
-- board.html 重建與變體切換：主題＝頁面根元素 class 加 `warm`／`pink`，線框加 `lined`
 
 ## 字體
 
