@@ -235,3 +235,5 @@ playwright 驅動本機 Chrome（channel=chrome），無需另外下載瀏覽器
 - 字數超預算：改寫句子（優先）；真的改不了，回報並建議拆頁
 - 版型庫與規格文件不一致：以 `design-tokens.md`／`components.md` 為準，並回報差異
 - 瀏覽器預覽異常（空白快照）：關閉重開 preview，或把目標頁暫換到已授權檔案路徑預覽
+- PPTX 進 Keynote 後物件行為存疑（拆群組、樣式跑掉）：用 keynote-inspector 技能
+  驅動 Keynote 開檔清點物件數驗證，不靠肉眼猜、不反覆請使用者截圖回報
