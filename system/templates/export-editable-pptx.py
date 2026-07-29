@@ -28,6 +28,7 @@ from pptx.util import Emu, Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR, MSO_AUTO_SIZE
 from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.dml import MSO_LINE_DASH_STYLE
 from pptx.oxml.ns import qn
 from PIL import Image
 
@@ -73,6 +74,20 @@ BODY_BOX_W_PX = 850        # 窄化置中框寬
 BODY_BOX_X_PX = 115        # (1080-850)/2，左右對稱留白
 
 HIGHLIGHT_YELLOW = (247, 233, 78)
+
+# 插畫位／照片位（class 含 illust-slot 或 photo-slot）的呈現規則
+# （2026-07-29 使用者定案：直角、灰色虛線邊框、無陰影、25pt、文字上下置中、單一物件。
+#  直角的原因：Keynote 匯入器遇到「圓角＋可見底色或框線」必拆成兩層群組——實驗證實
+#  連 Keynote 自家輸出的 pptx 重新匯入也一樣，無 XML 寫法可繞過；插畫位終會被生成圖
+#  蓋掉，捨圓角換單一物件。膠囊與句級螢光框則反向取捨：保留圓角、接受群組）
+SLOT_FONT_PT = 25
+SLOT_BORDER_GRAY = (138, 138, 133)   # 同插畫位說明文字的灰
+
+# 句級螢光筆（.hl-line 黃色圓角框）的呈現規則
+# （2026-07-28 使用者定案：文字直接打在圓角框內、上下置中、行距 1.3、字距 13%，單一物件）
+HLLINE_LINE_SPACING = 1.3
+HLLINE_LETTER_SPACING = 0.13
+HLLINE_RADIUS_PX = 8                 # 同 CSS .hl-line 的 border-radius
 
 def dominant_color_deviation(img):
     # 用原尺寸判斷（不能縮圖，縮圖會把細線圖形抗鋸齒掉，誤判成純色）
@@ -125,6 +140,27 @@ def etree_element(tag):
 def align_of(css_align):
     return {"center": PP_ALIGN.CENTER, "left": PP_ALIGN.LEFT,
             "right": PP_ALIGN.RIGHT, "justify": PP_ALIGN.JUSTIFY}.get(css_align, PP_ALIGN.LEFT)
+
+def set_round_rect(box, adj_val):
+    # 把 textbox 的幾何改成圓角矩形。文字直接放在帶底色的 textbox 裡（單一物件），
+    # 不用「autoshape 圖形＋文字」——Keynote 匯入 pptx 時會把後者拆成兩層。
+    # adj_val：OOXML roundRect 的圓角參數，圓角半徑 = min(寬,高) × adj_val/100000。
+    # 注意 spPr 子元素順序（xfrm → prstGeom → fill → ln）,幾何必須插在 xfrm 之後、
+    # 設定 fill/line 之前，順序錯了檔案有被判定損毀的風險。
+    spPr = box._element.spPr
+    for g in spPr.findall(qn('a:prstGeom')):
+        spPr.remove(g)
+    geom = _etree.Element(qn('a:prstGeom'))
+    geom.set('prst', 'roundRect')
+    av = _etree.SubElement(geom, qn('a:avLst'))
+    gd = _etree.SubElement(av, qn('a:gd'))
+    gd.set('name', 'adj')
+    gd.set('fmla', 'val %d' % int(adj_val))
+    xfrm = spPr.find(qn('a:xfrm'))
+    if xfrm is not None:
+        xfrm.addnext(geom)
+    else:
+        spPr.insert(0, geom)
 
 def add_highlight_shape(slide, x_px, y_px, w_px, h_px):
     # 螢光筆改用圖形色塊（不用 <a:highlight> 文字屬性——Keynote 的 pptx 匯入不支援該屬性）
@@ -218,7 +254,10 @@ EXTRACT_JS = """
         }
       }
     }
-    walk(el, el, null);
+    // 單元根節點本身就是螢光背景時（例如單元就是 .hl-line span），也要量到色塊矩形
+    const rootHl = isHighlightBg(getComputedStyle(el).backgroundColor)
+      ? highlightRectsOf(el, pageRect.left, pageRect.top) : null;
+    walk(el, el, rootHl);
     return paragraphs.filter((p, i) => p.length > 0 || i === paragraphs.length - 1);
   }
   const page = document.querySelector('.page');
@@ -259,6 +298,7 @@ EXTRACT_JS = """
       textAlign: cs.textAlign,
       lines: countLines(el),
       className: el.className || '',
+      hasHlLine: el.classList.contains('hl-line') || !!el.querySelector('.hl-line'),
       outerHTML: el.outerHTML,
       paragraphs: getParagraphs(el, pageRect),
     };
@@ -322,6 +362,25 @@ REMEASURE_JS = """
 }
 """
 
+# 句級螢光筆（.hl-line）重量測：套上新字距/行距後，黃框的自然寬高會變
+# （inline-block 寬度跟著內容長），量出新尺寸供置中擺放
+HLLINE_REMEASURE_JS = """
+({ html, letterSpacingEm, lineHeight }) => {
+  const container = document.createElement('div');
+  container.style.cssText = 'position:fixed; left:-9999px; top:0;';
+  container.innerHTML = html;
+  document.body.appendChild(container);
+  const root = container.firstElementChild;
+  const target = root.classList.contains('hl-line') ? root : root.querySelector('.hl-line');
+  target.style.letterSpacing = letterSpacingEm + 'em';
+  target.style.lineHeight = String(lineHeight);
+  const r = target.getBoundingClientRect();
+  const res = { w: r.width, h: r.height };
+  document.body.removeChild(container);
+  return res;
+}
+"""
+
 # ---------------------------------------------------------------------------
 # 主流程：逐頁擷取 + 組 PPTX（全程記憶體處理，不落地中繼檔）
 # ---------------------------------------------------------------------------
@@ -345,15 +404,21 @@ with sync_playwright() as p:
         # .body 覆寫單元：字級/框寬改變前，先重新量測（螢光筆位置＋精確高度）
         for u in units:
             classes = (u.get("className") or "").split()
-            if "body" not in classes:
-                continue
-            remeasured = page.evaluate(REMEASURE_JS, {
-                "html": u["outerHTML"], "boxWpx": BODY_BOX_W_PX,
-                "fontPx": BODY_FONT_PX, "lineHeight": BODY_LINE_SPACING,
-                "letterSpacingEm": BODY_LETTER_SPACING,
-            })
-            u["_body_height"] = remeasured["height"]
-            u["_body_hlRects"] = remeasured["hlRects"]  # 相對於新框左上角（局部座標）
+            if "body" in classes:
+                remeasured = page.evaluate(REMEASURE_JS, {
+                    "html": u["outerHTML"], "boxWpx": BODY_BOX_W_PX,
+                    "fontPx": BODY_FONT_PX, "lineHeight": BODY_LINE_SPACING,
+                    "letterSpacingEm": BODY_LETTER_SPACING,
+                })
+                u["_body_height"] = remeasured["height"]
+                u["_body_hlRects"] = remeasured["hlRects"]  # 相對於新框左上角（局部座標）
+            elif u.get("hasHlLine"):
+                # 句級螢光筆：量套上新字距/行距後黃框的自然尺寸
+                u["_hlline_size"] = page.evaluate(HLLINE_REMEASURE_JS, {
+                    "html": u["outerHTML"],
+                    "letterSpacingEm": HLLINE_LETTER_SPACING,
+                    "lineHeight": HLLINE_LINE_SPACING,
+                })
 
         el = page.query_selector(".page")
         if el is None:
@@ -374,6 +439,8 @@ with sync_playwright() as p:
         for u in units:
             classes = (u.get("className") or "").split()
             is_body = "body" in classes
+            is_slot = ("illust-slot" in classes) or ("photo-slot" in classes)
+            is_hlline = bool(u.get("hasHlLine"))
 
             # 找出這個文字單元裡，非透明、非螢光黃的背景色（視為卡片/藥丸底色）
             block_bg = None
@@ -391,39 +458,69 @@ with sync_playwright() as p:
                 box_x = BODY_BOX_X_PX
                 box_w = BODY_BOX_W_PX
                 box_h = u.get("_body_height", u["h"])
+            elif is_hlline:
+                # 句級螢光筆：黃框自己當文字框。以原黃框中心為錨，
+                # 套新字距/行距後的自然尺寸置中擺放
+                old = None
+                for para in u["paragraphs"]:
+                    for r in para:
+                        if r.get("hlRects"):
+                            old = r["hlRects"][0]
+                            break
+                    if old:
+                        break
+                if old is None:
+                    old = {"x": u["x"], "y": u["y"], "w": u["w"], "h": u["h"]}
+                size = u.get("_hlline_size") or {"w": old["w"], "h": old["h"]}
+                box_w, box_h = size["w"], size["h"]
+                box_x = old["x"] + old["w"] / 2 - box_w / 2
+                box_y = old["y"] + old["h"] / 2 - box_h / 2
 
             # 螢光筆色塊：先畫（在文字框之前加入 shape tree，z-order 才會在文字底下）
+            # （句級 .hl-line 除外——它的黃框就是文字框本身，不另畫色塊）
             if is_body:
                 for hr in u.get("_body_hlRects") or []:
                     add_highlight_shape(slide, box_x + hr["x"], box_y + hr["y"], hr["w"], hr["h"])
-            else:
+            elif not is_hlline:
                 for para in u["paragraphs"]:
                     for r in para:
                         for hr in (r.get("hlRects") or []):
                             add_highlight_shape(slide, hr["x"], hr["y"], hr["w"], hr["h"])
 
-            if block_bg:
+            # 一律用 textbox 承載文字（含帶底色的藥丸/卡片/插畫位），確保單一物件
+            box = slide.shapes.add_textbox(px(box_x), px(box_y), px(box_w), px(box_h))
+            tf = box.text_frame
+
+            if is_slot:
+                # 插畫位：直角（保單一物件）＋灰虛線框＋無陰影；底色照原樣（通常是白）
+                if block_bg:
+                    box.fill.solid()
+                    box.fill.fore_color.rgb = rgb_str_to_hex(block_bg)
+                box.line.color.rgb = RGBColor(*SLOT_BORDER_GRAY)
+                box.line.width = Pt(1.5)
+                box.line.dash_style = MSO_LINE_DASH_STYLE.DASH
+                box.shadow.inherit = False
+            elif is_hlline:
+                # 句級螢光筆：黃底圓角文字框，單一物件
+                set_round_rect(box, HLLINE_RADIUS_PX / max(1, min(box_w, box_h)) * 100000)
+                box.fill.solid()
+                box.fill.fore_color.rgb = RGBColor(*HIGHLIGHT_YELLOW)
+                box.line.fill.background()
+                box.shadow.inherit = False
+            elif block_bg:
                 is_pill = u["h"] < 80 and u["w"] / max(u["h"], 1) > 2
-                box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
-                                              px(box_x), px(box_y), px(box_w), px(box_h))
+                set_round_rect(box, 50000 if is_pill else 12000)
                 box.fill.solid()
                 box.fill.fore_color.rgb = rgb_str_to_hex(block_bg)
                 box.line.fill.background()
-                try:
-                    box.adjustments[0] = 0.5 if is_pill else 0.12
-                except Exception:
-                    pass
-                tf = box.text_frame
-            else:
-                box = slide.shapes.add_textbox(px(box_x), px(box_y), px(box_w), px(box_h))
-                tf = box.text_frame
+                box.shadow.inherit = False
 
-            tf.word_wrap = u.get("lines", 2) != 1
+            tf.word_wrap = False if is_hlline else (u.get("lines", 2) != 1)
             tf.margin_left = 0
             tf.margin_right = 0
             tf.margin_top = 0
             tf.margin_bottom = 0
-            tf.vertical_anchor = MSO_ANCHOR.TOP
+            tf.vertical_anchor = MSO_ANCHOR.MIDDLE if (is_slot or is_hlline) else MSO_ANCHOR.TOP
             try:
                 tf.auto_size = MSO_AUTO_SIZE.NONE
             except Exception:
@@ -435,19 +532,29 @@ with sync_playwright() as p:
                     continue
                 para = tf.paragraphs[0] if first_para else tf.add_paragraph()
                 first_para = False
-                para.alignment = align_of(u["textAlign"])
+                para.alignment = PP_ALIGN.CENTER if is_hlline else align_of(u["textAlign"])
                 if is_body:
                     para.line_spacing = BODY_LINE_SPACING
+                elif is_hlline:
+                    para.line_spacing = HLLINE_LINE_SPACING
                 for rd in para_runs:
                     text = rd["text"].strip()
                     if not text:
                         continue
                     run = para.add_run()
                     run.text = text
-                    run.font.size = Pt(BODY_FONT_PT) if is_body else Pt(round(rd["fontSize"] * 0.75, 1))
+                    if is_slot:
+                        run.font.size = Pt(SLOT_FONT_PT)
+                    elif is_body:
+                        run.font.size = Pt(BODY_FONT_PT)
+                    else:
+                        run.font.size = Pt(round(rd["fontSize"] * 0.75, 1))
                     if is_body:
-                        # 字距：OOXML 的 spc 屬性，單位 1/100 pt（30pt × 13% = 3.9pt = 390）
+                        # 字距：OOXML 的 spc 屬性，單位 1/100 pt（28pt × 13% = 3.64pt = 364）
                         run._r.get_or_add_rPr().set('spc', str(int(round(BODY_FONT_PT * BODY_LETTER_SPACING * 100))))
+                    elif is_hlline:
+                        pt_size = round(rd["fontSize"] * 0.75, 1)
+                        run._r.get_or_add_rPr().set('spc', str(int(round(pt_size * HLLINE_LETTER_SPACING * 100))))
                     run.font.bold = False
                     fname = jinxuan_font_name(rd["weight"])
                     run.font.name = fname
