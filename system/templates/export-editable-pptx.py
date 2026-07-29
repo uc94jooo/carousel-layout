@@ -88,6 +88,11 @@ SLOT_BORDER_GRAY = (138, 138, 133)   # 同插畫位說明文字的灰
 HLLINE_LINE_SPACING = 1.3
 HLLINE_LETTER_SPACING = 0.13
 HLLINE_RADIUS_PX = 8                 # 同 CSS .hl-line 的 border-radius
+HLLINE_PAD_V_PT = 8                  # 黃框上下各加的內距（2026-07-29 使用者定案）
+
+# 滿版頁（內容從頁頂邊距就開始的頁，如故事頁/收尾頁；封面除外）第一個物件的
+# 起始 y 統一下移到 80pt（2026-07-29 使用者定案；HTML 頁邊距 72px=54pt 太貼頂）
+FULLBLEED_FIRST_Y_PT = 80
 
 def dominant_color_deviation(img):
     # 用原尺寸判斷（不能縮圖，縮圖會把細線圖形抗鋸齒掉，誤判成純色）
@@ -362,6 +367,41 @@ REMEASURE_JS = """
 }
 """
 
+# SVG 圖表（循環箭頭、岔路線…）獨立擷取（2026-07-29 使用者定案：不再烙進背景圖，
+# 改成透明底 PNG 獨立物件，交付後可在 Keynote 單獨移動）。
+# 步驟：把 svg 的祖先鏈與頁面背景暫設透明 → 逐個 svg 以 omit_background 截透明圖
+# → 還原頁面背景 → 把 svg 隱藏（之後的背景截圖就不含圖表，多半能回到純色底）
+SVG_PREP_JS = """
+() => {
+  const page = document.querySelector('.page');
+  const pr = page.getBoundingClientRect();
+  const svgs = Array.from(page.querySelectorAll('svg'));
+  const out = [];
+  svgs.forEach((s, i) => {
+    s.setAttribute('data-export-svg', String(i));
+    let n = s.parentElement;
+    while (n && n !== page) { n.style.background = 'transparent'; n = n.parentElement; }
+    const r = s.getBoundingClientRect();
+    out.push({ x: r.left - pr.left, y: r.top - pr.top, w: r.width, h: r.height });
+  });
+  if (svgs.length) {
+    page.style.background = 'transparent';
+    document.body.style.background = 'transparent';
+    document.documentElement.style.background = 'transparent';
+  }
+  return out;
+}
+"""
+SVG_RESTORE_HIDE_JS = """
+() => {
+  const page = document.querySelector('.page');
+  page.style.background = '';
+  document.body.style.background = '';
+  document.documentElement.style.background = '';
+  page.querySelectorAll('svg').forEach(s => { s.style.visibility = 'hidden'; });
+}
+"""
+
 # 句級螢光筆（.hl-line）重量測：套上新字距/行距後，黃框的自然寬高會變
 # （inline-block 寬度跟著內容長），量出新尺寸供置中擺放
 HLLINE_REMEASURE_JS = """
@@ -401,6 +441,14 @@ with sync_playwright() as p:
 
         units = page.evaluate(EXTRACT_JS)
 
+        # 滿版頁規則：非封面、第一個物件貼著頁頂邊距開始的頁，首物件下移到 80pt
+        page_class = page.evaluate("() => (document.querySelector('.page').className || '')")
+        if units and "cover" not in page_class.split():
+            first = min(units, key=lambda u: u["y"])
+            first_y_target = FULLBLEED_FIRST_Y_PT / 0.75   # 80pt = 106.7px
+            if first["y"] < first_y_target:
+                first["y"] = first_y_target
+
         # .body 覆寫單元：字級/框寬改變前，先重新量測（螢光筆位置＋精確高度）
         for u in units:
             classes = (u.get("className") or "").split()
@@ -420,6 +468,18 @@ with sync_playwright() as p:
                     "lineHeight": HLLINE_LINE_SPACING,
                 })
 
+        # SVG 圖表獨立擷取為透明 PNG，之後從背景中隱藏
+        svg_infos = page.evaluate(SVG_PREP_JS)
+        svg_shots = []
+        for i, info in enumerate(svg_infos):
+            svg_el = page.query_selector(f'[data-export-svg="{i}"]')
+            if svg_el is None:
+                continue
+            svg_shots.append((info, svg_el.screenshot(omit_background=True)))
+        if svg_infos:
+            page.evaluate(SVG_RESTORE_HIDE_JS)
+            print(f"{name}: {len(svg_shots)} 個 SVG 圖表抽出為獨立物件")
+
         el = page.query_selector(".page")
         if el is None:
             print("略過（找不到 .page）:", f)
@@ -435,6 +495,11 @@ with sync_playwright() as p:
             print(f"{name}: 背景判定為純色 {top_color}（偏差像素 {dev_px}），改用底色，不嵌圖")
         else:
             slide.shapes.add_picture(io.BytesIO(bg_bytes), 0, 0, width=px(PX_W), height=px(PX_H))
+
+        # SVG 圖表：緊接在背景之後加入（z-order 在文字物件之下），各自是可移動的獨立圖片
+        for info, shot in svg_shots:
+            slide.shapes.add_picture(io.BytesIO(shot), px(info["x"]), px(info["y"]),
+                                     width=px(info["w"]), height=px(info["h"]))
 
         for u in units:
             classes = (u.get("className") or "").split()
@@ -472,7 +537,9 @@ with sync_playwright() as p:
                 if old is None:
                     old = {"x": u["x"], "y": u["y"], "w": u["w"], "h": u["h"]}
                 size = u.get("_hlline_size") or {"w": old["w"], "h": old["h"]}
-                box_w, box_h = size["w"], size["h"]
+                pad_v = HLLINE_PAD_V_PT / 0.75   # 上下各 8pt 內距
+                box_w = size["w"]
+                box_h = size["h"] + 2 * pad_v
                 box_x = old["x"] + old["w"] / 2 - box_w / 2
                 box_y = old["y"] + old["h"] / 2 - box_h / 2
 
