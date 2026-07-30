@@ -70,10 +70,12 @@ description: >
   可做互動試衣間讓使用者即時切換挑選。試衣間用共用腳本組裝（與 export.py
   同模式，全技能只有一份，勿複製進專案資料夾）：
   ```
-  <裝有 playwright 的 python3> <技能根目錄>/system/templates/build-board.py \
+  python3 <技能根目錄>/system/templates/build-board.py \
     P1.html P2.html ... [--title 標題] [--default-theme warm] [--default-grid on]
   ```
-  board.html 產在頁面資料夾；頁內圖片自動 base64 內嵌，board 放哪都不斷圖
+  純標準函式庫（argparse/glob/base64…），不需 playwright，任何 python3 都能跑。
+  board.html 產在頁面資料夾；頁內圖片自動 base64 內嵌，board 放哪都不斷圖。
+  第 4 步會用此指令自動產一份預設版，見第 4 步說明
 
 ### 第 2 步：編頁開工單
 - **素材盤點（每篇必做，2026-07-27 定）**：編頁前先對全文逐條回答判別問句，
@@ -144,8 +146,12 @@ file:// 直開，全部版型活縮圖），讓使用者裁決元件時看得到
   工單「銜接」欄在編頁階段鎖定，平行不影響；但第 5 步自檢與第 6 步 PPTX 轉檔仍由
   主流程統一執行，不交給子代理分頭做
 - 填完跑 `python3 templates/build-index.py` 重建總覽頁
+- **board.html 隨頁面一起產出（2026-07-30 使用者定案，改列預設步驟）**：全部頁面填完後，
+  跟著跑一次 `build-board.py`（見第 1 步指令；不需 playwright，純標準函式庫，直接跑），
+  和各頁 HTML 一起交付，讓使用者不用另外開口就能即時切換主題／框線／格線比較。
+  裁決有改動、頁面重填時，比照三檔同步更新的精神一併重跑覆寫，不另開新檔名
 - 存檔路徑（2026-07-28 改）：所有產出（工單三檔 .md、頁面 HTML、
-  assets/themes 複本、PPTX，選配的 board.html／PNG）一律存
+  assets/themes 複本、board.html、PPTX，選配的 PNG）一律存
   `~/Documents/Obsidian Vault/_排版小幫手/<YYYY-MM-DD 專案名>/`（日期前綴＝專案製作日）；
   使用者若沒有 Obsidian Vault，改存 AI 專案根目錄的
   `_排版小幫手/<YYYY-MM-DD 專案名>/`（例：`~/Desktop/Claude/_排版小幫手/...`）。
@@ -207,8 +213,9 @@ HTML 填完、自檢過後，**直接轉成可編輯 PPTX 交付編輯人員**�
 - 字型：本機要裝好 `jf-jinxuan` 各字重 OpenType 家族（ExtraBold／Bold／Medium／
   Book／UltraLight，各自獨立家族名，不是同家族的粗細變化），沒裝會退回系統字
 
-### 選配：board.html 試衣間（要比較主題/框線才組）
-用法見第 1 步。預設產線不組 board；使用者要即時切換主題、框線、格線比較時才組。
+### board.html 試衣間（2026-07-30 改列第 4 步預設產出，此處只留客製用法）
+指令與參數見第 1 步。標準流程已在第 4 步自動組一份預設版（gray/無框/無格）；
+這裡的手動指令只在使用者要客製標籤、換預設主題、或裁決大改後想單獨重跑一次時才用。
 
 ### 選配：HTML 直出 PNG（簡單篇不進 PPT 改稿時才用，2026-07-23 定）
 正式 PNG 已改由編輯人員從 Keynote 輸出；只有使用者明說這篇不進 PPT、
