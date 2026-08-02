@@ -53,7 +53,7 @@
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -62,10 +62,11 @@
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }

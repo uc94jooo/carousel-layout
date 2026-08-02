@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>C27 三圓交疊圖（物件標本）</title>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="../../themes/themes.css">
+<link rel="stylesheet" href="assets/base.css">
+<!-- C27 三圓交疊圖物件標本（規格見 components.md C27）
+     本檔只展示物件本體；組頁時把物件塊複製進頁面，組裝參考任務實例庫（page-layouts.md）。
+     .venn 容器內：SVG 三個透明底墨線圓（品字交疊）＋三個 .vlabel 絕對定位圈標籤
+     （各圈遠離交集的一側）＋ .vcenter 交集核心詞（可加 C1 螢光）。
+     改圓心或半徑時同步調整 .vlabel 位置。首排實例：「想毀掉一個人的興趣」P2。 -->
+</head>
+<body>
+<div class="page center" style="justify-content: center;">
+
+  <div class="venn">
+    <svg viewBox="0 0 760 560" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="380" cy="195" r="170" fill="none" style="stroke: var(--ink); stroke-width: 5;"/>
+      <circle cx="290" cy="340" r="170" fill="none" style="stroke: var(--ink); stroke-width: 5;"/>
+      <circle cx="470" cy="340" r="170" fill="none" style="stroke: var(--ink); stroke-width: 5;"/>
+    </svg>
+    <div class="vlabel" style="left: 50%; top: 110px;">我喜歡想創意</div>
+    <div class="vlabel" style="left: 27%; top: 425px;">我也擅長做創意</div>
+    <div class="vlabel" style="left: 73%; top: 425px;">做創意能賺錢</div>
+    <div class="vcenter"><span class="hl">永動機</span></div>
+  </div>
+
+</div>
+</body>
+</html>

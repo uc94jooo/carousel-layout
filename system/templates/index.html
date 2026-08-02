@@ -61,23 +61,27 @@
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -105,7 +109,7 @@
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -114,12 +118,13 @@
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -318,7 +323,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -535,6 +540,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -674,7 +696,7 @@ body { line-break: strict; }
   &lt;div class=&quot;caption&quot;&gt;封面雙行｜88px&lt;/div&gt;
 
   &lt;div class=&quot;h1&quot; style=&quot;margin-top: 26px;&quot;&gt;你有沒有遇過這種狀況？&lt;/div&gt;
-  &lt;div class=&quot;caption&quot;&gt;頁標｜76px（1～2 行）｜多行一律降 64px&lt;/div&gt;
+  &lt;div class=&quot;caption&quot;&gt;頁標｜61.33px（46pt）｜不分單行、雙行、三行，固定套用&lt;/div&gt;
 
   &lt;div class=&quot;h2&quot; style=&quot;margin-top: 26px;&quot;&gt;區塊小標示範&lt;/div&gt;
   &lt;div class=&quot;caption&quot;&gt;小標｜48px&lt;/div&gt;
@@ -697,23 +719,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -741,7 +767,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -750,12 +776,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -954,7 +981,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -1171,6 +1198,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -1327,23 +1371,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -1371,7 +1419,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -1380,12 +1428,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -1584,7 +1633,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -1801,6 +1850,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -1953,23 +2019,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -1997,7 +2067,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -2006,12 +2076,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -2210,7 +2281,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -2427,6 +2498,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -2579,23 +2667,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -2623,7 +2715,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -2632,12 +2724,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -2836,7 +2929,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -3053,6 +3146,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -3208,23 +3318,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -3252,7 +3366,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -3261,12 +3375,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -3465,7 +3580,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -3682,6 +3797,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -3837,23 +3969,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -3881,7 +4017,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -3890,12 +4026,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -4094,7 +4231,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -4311,6 +4448,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -4472,23 +4626,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -4516,7 +4674,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -4525,12 +4683,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -4729,7 +4888,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -4946,6 +5105,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -5113,23 +5289,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -5157,7 +5337,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -5166,12 +5346,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -5370,7 +5551,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -5587,6 +5768,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -5749,23 +5947,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -5793,7 +5995,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -5802,12 +6004,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -6006,7 +6209,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -6223,6 +6426,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -6387,23 +6607,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -6431,7 +6655,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -6440,12 +6664,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -6644,7 +6869,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -6861,6 +7086,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -7017,23 +7259,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -7061,7 +7307,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -7070,12 +7316,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -7274,7 +7521,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -7491,6 +7738,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -7643,23 +7907,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -7687,7 +7955,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -7696,12 +7964,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -7900,7 +8169,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -8117,6 +8386,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -8285,23 +8571,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -8329,7 +8619,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -8338,12 +8628,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -8542,7 +8833,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -8759,6 +9050,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -8917,23 +9225,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -8961,7 +9273,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -8970,12 +9282,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -9174,7 +9487,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -9391,6 +9704,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -9546,23 +9876,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -9590,7 +9924,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -9599,12 +9933,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -9803,7 +10138,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -10020,6 +10355,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -10172,23 +10524,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -10216,7 +10572,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -10225,12 +10581,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -10429,7 +10786,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -10646,6 +11003,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -10802,23 +11176,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -10846,7 +11224,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -10855,12 +11233,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -11059,7 +11438,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -11276,6 +11655,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -11435,23 +11831,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -11479,7 +11879,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -11488,12 +11888,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -11692,7 +12093,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -11909,6 +12310,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -12061,23 +12479,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -12105,7 +12527,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -12114,12 +12536,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -12318,7 +12741,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -12535,6 +12958,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -12699,23 +13139,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -12743,7 +13187,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -12752,12 +13196,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -12956,7 +13401,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -13173,6 +13618,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -13333,23 +13795,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -13377,7 +13843,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -13386,12 +13852,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -13590,7 +14057,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -13807,6 +14274,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -13966,23 +14450,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -14010,7 +14498,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -14019,12 +14507,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -14223,7 +14712,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -14440,6 +14929,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -14620,23 +15126,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -14664,7 +15174,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -14673,12 +15183,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -14877,7 +15388,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -15094,6 +15605,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -15250,23 +15778,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -15294,7 +15826,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -15303,12 +15835,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -15507,7 +16040,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -15724,6 +16257,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -15889,23 +16439,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -15933,7 +16487,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -15942,12 +16496,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -16146,7 +16701,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -16363,6 +16918,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -16518,23 +17090,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -16562,7 +17138,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -16571,12 +17147,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -16775,7 +17352,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -16992,6 +17569,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -17162,23 +17756,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -17206,7 +17804,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -17215,12 +17813,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -17419,7 +18018,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -17636,6 +18235,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -17791,23 +18407,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -17835,7 +18455,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -17844,12 +18464,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -18048,7 +18669,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -18265,6 +18886,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -18422,23 +19060,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -18466,7 +19108,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -18475,12 +19117,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -18679,7 +19322,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -18896,6 +19539,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -19052,23 +19712,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -19096,7 +19760,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -19105,12 +19769,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -19309,7 +19974,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -19526,6 +20191,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -19669,16 +20351,11 @@ body { line-break: strict; }
 &lt;/body&gt;
 &lt;/html&gt;
 "></iframe></div><span class="label">C26b 外文揭曉【中區塊｜標題】</span></a>
-</div>
-</section>
-<section id="sec-task">
-<h2>任務實例（組裝範例：結構可重排，任務才是不變的）</h2>
-<div class="grid">
-<a class="thumb" data-cat="task" href="L1-cover.html" target="_blank"><div class="frame-wrap"><iframe srcdoc="&lt;!DOCTYPE html&gt;
+<a class="thumb" data-cat="obj 中 半" href="C27-venn.html" target="_blank"><div class="frame-wrap"><iframe srcdoc="&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;zh-Hant&quot;&gt;
 &lt;head&gt;
 &lt;meta charset=&quot;UTF-8&quot;&gt;
-&lt;title&gt;L1 cover 封面頁&lt;/title&gt;
+&lt;title&gt;C27 三圓交疊圖（物件標本）&lt;/title&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;../../themes/themes.css&quot;&gt;
 &lt;style&gt;
 /* ============================================
@@ -19688,23 +20365,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -19732,7 +20413,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -19741,12 +20422,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -19945,7 +20627,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -20162,6 +20844,689 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
+}
+
+/* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
+   結構：.fork-wrap &gt; .fork-start ＋ 岔線 SVG ＋ .fork-cols &gt; .fork-col ×2
+   岔線 SVG 寫在頁面 HTML 裡（兩條 line，實線用 --ink、虛線用 --ink-soft），
+   參考實作：templates/C19-fork.html */
+.fork-wrap { display: flex; flex-direction: column; width: 100%; align-items: center; }
+.fork-start {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-pill);
+  padding: 24px 56px;
+  font-size: var(--text-h2);
+  font-weight: 900;
+  font-family: var(--font-head);
+  align-self: center;
+}
+.fork-svg { width: 100%; height: 130px; display: block; }
+.fork-cols { display: flex; gap: var(--card-gap); width: 100%; align-items: flex-start; }
+.fork-col { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.fork-label { font-size: var(--text-caption); font-weight: 700; margin-bottom: 20px; }
+.fork-node {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 22px 30px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  text-align: center;
+  width: 100%;
+}
+.fork-link { font-size: 40px; font-weight: 900; line-height: 1; padding: 14px 0; }
+/* 沒走的路：灰、虛線、斷尾 ✕（灰只准 --ink-soft） */
+.fork-col.ghost .fork-label { color: var(--ink-soft); }
+.fork-col.ghost .fork-node { border-style: dashed; border-color: var(--ink-soft); color: var(--ink-soft); background: transparent; }
+.fork-col.ghost .fork-link { color: var(--ink-soft); }
+.fork-col.ghost .dead { font-size: 44px; font-weight: 900; color: var(--ink-soft); padding-top: 16px; }
+
+/* ---------- 佔位框統一改為灰白棋盤格（20px 格，示意「待填圖」） ---------- */
+.illust-slot, .avatar-slot, .author-card .photo-slot {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%),
+    linear-gradient(45deg, #e2e2e0 25%, transparent 25%, transparent 75%, #e2e2e0 75%);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  color: #8a8a85;
+  text-shadow: 0 0 6px #ffffff, 0 0 12px #ffffff;
+}
+
+/* ---------- 斷行優化：避免行尾孤字（詳見 design-tokens.md 字數預算） ---------- */
+body { line-break: strict; }
+.hero, .h1, .h2, .quote-bar, .subtitle-rule { text-wrap: balance; }
+.body, .vs-body, .case-body, .point .text, .scenario-card .lines,
+.check-item, .bubble, .cta-bar, .author-card .bio { text-wrap: pretty; }
+
+/* ---------- 方格紙底紋（格線色隨主題） ----------
+   規則（2026-07-22 定案）：暖色主題內頁「預設」帶格子紙（封面除外）；
+   灰色主題為選配（加 .grid-paper 啟用）。暖主題內頁要素底時加 .no-grid 退出。 */
+.page.grid-paper,
+.page.warm:not(.cover),
+.page.pink:not(.cover) {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-position: center top;
+}
+.page.no-grid { background-image: none !important; }
+
+/* ---------- 線框（選配，任何主題可疊 .lined）：內緣細墨線框＋頁尾隔間線 ---------- */
+.page.lined { padding: 116px 104px 168px; }
+.page.lined::before {
+  content: &quot;&quot;;
+  position: absolute;
+  inset: 44px;
+  border: 2px solid var(--ink);
+  pointer-events: none;
+}
+.page.lined::after {
+  content: &quot;&quot;;
+  position: absolute;
+  left: 44px;
+  right: 44px;
+  bottom: 122px;
+  border-top: 2px solid var(--ink);
+}
+.page.lined .footer { bottom: 72px; }
+
+/* ---------- C20 光譜條（2026-07-28 施工層入庫，規格見 components.md C20） ---------- */
+.spectrum { display: flex; align-items: center; gap: 28px; width: 100%; }
+.spectrum .end { font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head); white-space: nowrap; }
+.spectrum .line { flex: 1; height: 4px; background: var(--ink); position: relative; }
+.spectrum .tick { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 12px; height: 40px; background: var(--highlight); border: 2px solid var(--ink); border-radius: 4px; }
+
+/* ---------- C25 超大數字（2026-07-28 入庫，規格見 components.md C25） ----------
+   單一數據當主角：可選導語行＋佔滿欄寬的超大數字＋說明句 */
+.big-stat { display: flex; flex-direction: column; gap: 28px; text-align: left; width: 100%; }
+.big-stat .bs-lead { font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head); }
+.big-stat .bs-num { font-size: 380px; font-weight: 900; font-family: var(--font-head); line-height: 1.05; }
+.big-stat .bs-note { font-size: var(--text-body); font-weight: 700; line-height: 1.6; }
+
+/* ---------- C26 中英名詞標（2026-07-28 入庫，規格見 components.md C26） ----------
+   知識名牌：中文名詞大標＋英文原名小字（灰、拉字距、全大寫） */
+.term-title { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+.term-title .tt-zh { font-size: var(--text-h1); font-weight: 900; font-family: var(--font-head); line-height: 1.2; }
+.term-title .tt-en { font-size: 28px; font-weight: 600; color: var(--ink-soft); letter-spacing: 0.14em; text-transform: uppercase; }
+
+/* ---------- C6d 非等比圖文區（2026-07-28 入庫，規格見 components.md C6 變體） ----------
+   左文右圖非等比分欄（約 2:1）；左欄普通段落（可換清單等物件），圖位拉高吃留白 */
+.side-list { display: flex; gap: 48px; width: 100%; align-items: stretch; }
+.side-list .sl-main { flex: 1.8; display: flex; flex-direction: column; justify-content: center; }
+.side-list .sl-aside { flex: 1; display: flex; }
+.side-list .sl-aside .illust-slot { width: 100%; }
+
+/* ---------- C26b 外文揭曉（2026-07-28 入庫，規格見 components.md C26 變體） ----------
+   導語行＋外文大字（可加螢光）＋破折號中文譯名；可裸放或墊米色卡 */
+.term-reveal { display: flex; flex-direction: column; gap: 22px; text-align: left; width: 100%; }
+.term-reveal.on-card { background: var(--ink); color: var(--bg-page); border-radius: var(--radius-card); padding: 64px 72px; }
+.term-reveal.on-card .hl { color: var(--ink); }
+.term-reveal .tr-lead { font-size: var(--text-body); font-weight: 700; }
+.term-reveal .tr-en { font-size: 96px; font-weight: 900; font-family: var(--font-head); line-height: 1.2; }
+.term-reveal .tr-zh { font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head); }
+
+&lt;/style&gt;
+&lt;!-- C27 三圓交疊圖物件標本（規格見 components.md C27）
+     本檔只展示物件本體；組頁時把物件塊複製進頁面，組裝參考任務實例庫（page-layouts.md）。
+     .venn 容器內：SVG 三個透明底墨線圓（品字交疊）＋三個 .vlabel 絕對定位圈標籤
+     （各圈遠離交集的一側）＋ .vcenter 交集核心詞（可加 C1 螢光）。
+     改圓心或半徑時同步調整 .vlabel 位置。首排實例：「想毀掉一個人的興趣」P2。 --&gt;
+&lt;style&gt;body{padding:0;background:transparent;display:block;}&lt;/style&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;page center&quot; style=&quot;justify-content: center;&quot;&gt;
+
+  &lt;div class=&quot;venn&quot;&gt;
+    &lt;svg viewBox=&quot;0 0 760 560&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&gt;
+      &lt;circle cx=&quot;380&quot; cy=&quot;195&quot; r=&quot;170&quot; fill=&quot;none&quot; style=&quot;stroke: var(--ink); stroke-width: 5;&quot;/&gt;
+      &lt;circle cx=&quot;290&quot; cy=&quot;340&quot; r=&quot;170&quot; fill=&quot;none&quot; style=&quot;stroke: var(--ink); stroke-width: 5;&quot;/&gt;
+      &lt;circle cx=&quot;470&quot; cy=&quot;340&quot; r=&quot;170&quot; fill=&quot;none&quot; style=&quot;stroke: var(--ink); stroke-width: 5;&quot;/&gt;
+    &lt;/svg&gt;
+    &lt;div class=&quot;vlabel&quot; style=&quot;left: 50%; top: 110px;&quot;&gt;我喜歡想創意&lt;/div&gt;
+    &lt;div class=&quot;vlabel&quot; style=&quot;left: 27%; top: 425px;&quot;&gt;我也擅長做創意&lt;/div&gt;
+    &lt;div class=&quot;vlabel&quot; style=&quot;left: 73%; top: 425px;&quot;&gt;做創意能賺錢&lt;/div&gt;
+    &lt;div class=&quot;vcenter&quot;&gt;&lt;span class=&quot;hl&quot;&gt;永動機&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe></div><span class="label">C27 三圓交疊圖【中區塊～半頁】</span></a>
+</div>
+</section>
+<section id="sec-task">
+<h2>任務實例（組裝範例：結構可重排，任務才是不變的）</h2>
+<div class="grid">
+<a class="thumb" data-cat="task" href="L1-cover.html" target="_blank"><div class="frame-wrap"><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-Hant&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;L1 cover 封面頁&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../../themes/themes.css&quot;&gt;
+&lt;style&gt;
+/* ============================================
+   排版小幫手 design tokens
+   單一事實來源：../../design-tokens.md
+   色值：2026-07-22 依使用者提供之成品合成圖視覺精校，
+   第六步重製驗證時再微調。
+   ============================================ */
+
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: &quot;JinXuan&quot;;
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  /* 基底色 */
+  /* 主題色（--bg-page/--bg-cover/--grid-line）已模組化：見 themes/ 目錄，頁面需連結 themes.css */
+  --bg-card: #ffffff;
+  --bg-cream: #f6f0df;
+  --ink: #1b1b19;
+  --ink-soft: #55554f;
+
+  /* 強調色（全系列唯一） */
+  --highlight: #f7e94e;
+
+  /* 插畫限定色：只給插畫與 icon，不進版式 */
+  --illust-skin: #f2e3d5;
+  --illust-hair: #6b5647;
+  --illust-red: #e8626d;
+  --illust-tan: #d9a662;
+
+  /* 字型 */
+  --font-head: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+  --font-body: &quot;JinXuan&quot;, &quot;Noto Sans TC&quot;, &quot;PingFang TC&quot;, sans-serif;
+
+  /* 字級（1080 寬基準） */
+  --text-hero: 128px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
+  --text-h2: 48px;
+  --text-body: 38px;
+  --text-caption: 30px;
+  --text-footer: 26px;
+
+  /* 間距與圓角 */
+  --page-pad: 72px;
+  --block-gap: 48px;
+  --section-gap: 80px;
+  --card-pad: 40px;
+  --card-gap: 32px;
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --border-w: 3px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
+}
+
+/* ============================================
+   主題：螢光筆灰色（預設）
+   定位：思考、理性、知識類
+   啟用：class=&quot;page&quot;（不加任何主題 class 即此主題）
+   內頁 #EAEAE8 淺暖灰｜封面 #D2D2CE 銀灰｜格線 墨色 5.5%（選配）
+   ============================================ */
+:root {
+  --bg-page: #eaeae8;
+  --bg-cover: #d2d2ce;
+  --grid-line: rgba(27, 27, 25, 0.055);
+}
+
+/* ============================================
+   主題：螢光粉色（rhode 取向，2026-07-22 轉正）
+   定位：兩性、感情、輕生活類
+   啟用：class=&quot;page pink&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #F1E4E2 淺腮紅｜封面 #D6ACAC 乾燥玫瑰｜格線 玫瑰褐 9%
+   ============================================ */
+.page.pink {
+  --bg-page: #f1e4e2;
+  --bg-cover: #d6acac;
+  --grid-line: rgba(153, 92, 97, 0.09);
+}
+
+/* ============================================
+   主題：螢光暖色
+   定位：生活感、情感、儀式類
+   啟用：class=&quot;page warm&quot;｜內頁預設帶格子紙（封面除外）
+   內頁 #EFEAE2 暖象牙｜封面 #D8D1C6 greige｜格線 暖褐 8%
+   ============================================ */
+.page.warm {
+  --bg-page: #efeae2;
+  --bg-cover: #d8d1c6;
+  --grid-line: rgba(93, 78, 62, 0.08);
+}
+
+/* ============================================
+   排版小幫手 base：頁面骨架 + C1~C13 元件
+   元件規格：../../components.md
+   ============================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #cfcfcd; /* 預覽用外框色，截圖時只取 .page */
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+/* ---------- 頁面畫布 1080×1350 ---------- */
+.page {
+  width: 1080px;
+  height: 1350px;
+  background: var(--bg-page);
+  padding: var(--page-pad);
+  padding-bottom: 120px; /* 頁尾保留區 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--block-gap);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.page.center { align-items: center; text-align: center; }
+.page.cover { background: var(--bg-cover); }
+
+/* ---------- 文字層級 ---------- */
+.hero  { font-size: var(--text-hero); font-weight: 900; line-height: 1.25; letter-spacing: 0.02em; font-family: var(--font-head); }
+.hero2 { font-size: 88px; font-weight: 900; line-height: 1.3; letter-spacing: 0.02em; font-family: var(--font-head); text-wrap: balance; }
+.h1    { font-size: var(--text-h1);   font-weight: 900; line-height: 1.3;  letter-spacing: 0.02em; font-family: var(--font-head); }
+.h2    { font-size: var(--text-h2);   font-weight: 700; line-height: 1.4;  font-family: var(--font-head); }
+.h3    { font-size: var(--text-body); font-weight: 900; line-height: 1.5;  font-family: var(--font-head); }
+.body  { font-size: var(--text-body); font-weight: 500; line-height: 1.6;  letter-spacing: 0.05em; }
+.caption { font-size: var(--text-caption); font-weight: 500; line-height: 1.5; color: var(--ink-soft); }
+
+/* ---------- C1 螢光筆 ---------- */
+.hl {
+  background: var(--highlight);
+  padding: 0.02em 0.1em;
+  border-radius: 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ---------- C2 系列標籤 ---------- */
+.series-pill {
+  align-self: center;
+  background: var(--ink);
+  color: var(--bg-page);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  padding: 12px 36px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.15em;
+}
+
+/* ---------- C3 副標分隔線 ---------- */
+.subtitle-rule {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  justify-content: center;
+  font-size: var(--text-h2);
+  font-weight: 700;
+  width: 100%;
+}
+.subtitle-rule::before,
+.subtitle-rule::after {
+  content: &quot;&quot;;
+  flex: 1;
+  max-width: 130px;
+  border-top: var(--border-w) solid var(--ink);
+}
+
+/* ---------- C4 對話框 ---------- */
+.bubble {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 20px 32px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  position: relative;
+  width: fit-content;
+}
+.bubble::after {
+  content: &quot;&quot;;
+  position: absolute;
+  bottom: -18px;
+  left: 48px;
+  border: 12px solid transparent;
+  border-top-color: var(--ink);
+}
+.bubble.tail-right::after { left: auto; right: 48px; }
+
+/* ---------- C5 情境卡 ---------- */
+.scenario-card {
+  background: var(--bg-cream);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.scenario-card .avatar { flex-shrink: 0; }
+.scenario-card .lines { display: flex; flex-direction: column; gap: 18px; font-size: var(--text-body); line-height: 1.55; text-align: left; }
+
+/* ---------- C6 對照卡 ---------- */
+.versus { display: flex; gap: var(--card-gap); width: 100%; }
+.versus-card {
+  flex: 1;
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  text-align: center;
+}
+.versus-card .vs-title { font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head); }
+.versus-card .vs-body { font-size: var(--text-body); line-height: 1.6; text-align: left; }
+
+/* ---------- C6c 大數字對照（2026-07-28 入庫，規格見 components.md C6 變體） ----------
+   卡片退場：兩欄各一個超大數字＋說明段；次要數字用 .soft 灰階分主客 */
+.versus-num { display: flex; gap: 56px; width: 100%; }
+.versus-num .vn-col { flex: 1; display: flex; flex-direction: column; gap: 44px; text-align: left; }
+.versus-num .vn-num { font-size: 200px; font-weight: 900; font-family: var(--font-head); line-height: 1; }
+.versus-num .vn-col.soft .vn-num { color: var(--ink-soft); }
+.versus-num .vn-body { font-size: var(--text-body); font-weight: 700; line-height: 1.6; }
+
+/* ---------- C7 編號圓圈 ---------- */
+.num-circle {
+  width: 88px;
+  height: 88px;
+  border: 5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  font-weight: 900;
+  font-family: var(--font-head);
+  flex-shrink: 0;
+}
+
+/* ---------- C8 引言黑線框 ---------- */
+.quote-bar {
+  border-left: var(--quote-bar-w) solid var(--ink);
+  padding: 12px 0 12px 44px;
+  font-size: 56px;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
+  line-height: 1.55;
+  font-family: var(--font-head);
+  text-align: left;
+}
+
+/* ---------- C9 icon 三欄組 ---------- */
+.icon-trio { display: flex; width: 100%; }
+.icon-trio .col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.icon-trio .col .h2 { font-weight: 900; }
+
+/* ---------- C10 橫向流程條 ---------- */
+.flow-strip {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-card);
+  padding: 28px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+.flow-strip .node { display: flex; align-items: center; gap: 16px; font-size: var(--text-caption); font-weight: 700; }
+.flow-strip .arrow { font-size: 40px; font-weight: 900; }
+
+/* ---------- C11 CTA 黃條 ---------- */
+.cta-bar {
+  background: var(--highlight);
+  border-radius: var(--radius-card);
+  padding: 32px var(--card-pad);
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: left;
+  width: 100%;
+}
+
+/* ---------- C13 頁尾 ---------- */
+.footer {
+  position: absolute;
+  bottom: 44px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: var(--text-footer);
+  color: var(--ink-soft);
+  letter-spacing: 0.08em;
+}
+
+/* ---------- 插畫佔位（產圖時以 AI 插畫替換） ---------- */
+.illust-slot {
+  border: 3px dashed #a9a9a4;
+  border-radius: var(--radius-card);
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-caption);
+  text-align: center;
+  line-height: 1.6;
+  padding: 20px;
+}
+.avatar-slot {
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* ---------- 通用小工具 ---------- */
+.spacer { flex: 1; }
+.arrow-lead { font-weight: 700; }
+.divider-dotted {
+  width: 0;
+  border-left: 4px dotted var(--ink);
+  height: 40px;
+  margin-left: 44px;
+}
+
+/* ---------- C14 勾選清單 ---------- */
+.checklist { display: flex; flex-direction: column; gap: 44px; }
+.check-item { display: flex; gap: 28px; align-items: flex-start; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.check-item .mark { font-size: 46px; line-height: 1.2; }
+
+/* ---------- C14a 編號圓圈清單（2026-07-28 入庫，規格見 components.md C14 變體） ----------
+   有順序的重點清單：C7 編號圓圈＋重點句，項目間虛線連接 */
+.num-list { display: flex; flex-direction: column; width: 100%; }
+.num-list .point { display: flex; align-items: center; gap: 36px; font-size: var(--text-body); font-weight: 700; line-height: 1.5; text-align: left; }
+.num-list .nl-link { border-left: 4px dotted var(--ink); height: 44px; margin-left: 44px; }
+
+/* ---------- C15 金句引號 ---------- */
+.big-quote {
+  position: relative;
+  padding: 40px 90px;
+  font-size: var(--text-h2);
+  font-weight: 900;
+  line-height: 1.65;
+  text-align: center;
+  font-family: var(--font-head);
+}
+.big-quote::before, .big-quote::after {
+  position: absolute;
+  font-size: 130px;
+  font-family: Georgia, serif;
+  color: var(--ink);
+  line-height: 1;
+}
+.big-quote::before { content: &quot;\201C&quot;; left: 0; top: -10px; }
+.big-quote::after  { content: &quot;\201D&quot;; right: 0; bottom: -40px; }
+
+/* ---------- C16 自介卡 ---------- */
+.author-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  display: flex;
+  gap: 36px;
+  width: 100%;
+  align-items: flex-start;
+}
+.author-card .photo-slot {
+  width: 250px;
+  height: 250px;
+  border-radius: 16px;
+  border: 3px dashed #a9a9a4;
+  color: #a9a9a4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.author-card .info { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.author-card .name { font-size: 42px; font-weight: 900; font-family: var(--font-head); }
+.author-card .bio { font-size: 27px; line-height: 1.65; color: var(--ink); }
+.author-card .follow { font-size: 27px; font-weight: 700; margin-top: 6px; }
+
+/* ---------- C17 垂直 icon 流程 ---------- */
+.icon-flow { display: flex; flex-direction: column; }
+.icon-flow .row { display: flex; align-items: center; gap: 36px; font-size: var(--text-body); font-weight: 700; line-height: 1.5; }
+.icon-flow .glyph { width: 100px; font-size: 64px; text-align: center; flex-shrink: 0; }
+.icon-flow .link { border-left: 4px dashed var(--ink); height: 52px; margin-left: 50px; }
+
+/* ---------- C6b 非等比對照（2026-07-27 入庫，規格見 components.md C6 變體） ----------
+   用法：.versus.uneven &gt; .versus-card.major ＋ .versus-card.minor
+   寬卡裝「被放大的說法」，窄卡裝「被縮小／藏起來的說法」，寬度即語意 */
+.versus.uneven { align-items: stretch; }
+.versus.uneven .versus-card.major { flex: 2; }
+.versus.uneven .versus-card.minor { flex: 1; }
+.versus.uneven .versus-card.minor .vs-title { font-size: var(--text-caption); font-weight: 900; }
+.versus.uneven .versus-card.minor .vs-body { font-size: var(--text-caption); color: var(--ink-soft); line-height: 1.7; }
+
+/* ---------- C18 膠囊列（2026-07-27 入庫，規格見 components.md C18） ----------
+   3～5 顆描邊膠囊橫排；.hot（黃底）一列最多一顆，標示「本篇主講」 */
+.pill-row { display: flex; gap: 24px; justify-content: center; width: 100%; }
+.pill-row .pill {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-pill);
+  padding: 18px 42px;
+  font-size: var(--text-body);
+  font-weight: 700;
+  font-family: var(--font-head);
+  white-space: nowrap;
+}
+.pill-row .pill.hot { background: var(--highlight); }
+/* C18 直排變體（2026-07-27 入庫）：窄欄、岔路分支、清單場景用 */
+.pill-col { display: flex; flex-direction: column; gap: 16px; align-items: center; }
+.pill-col .pill {
+  background: var(--bg-card); border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-pill); padding: 12px 36px;
+  font-size: 30px; font-weight: 700; font-family: var(--font-head); white-space: nowrap;
+}
+
+/* ---------- L12 敘事區＋句級螢光獨立行（2026-07-27 入庫：連續兩專案實戰後升格共用） ---------- */
+.story { display: flex; flex-direction: column; gap: 40px; text-align: left; width: 100%; }
+.story .body { line-height: 1.7; }
+.hl-line {
+  display: inline-block; background: var(--highlight);
+  padding: .08em .35em; border-radius: 8px;
+  font-size: 44px; font-weight: 900; font-family: var(--font-head); line-height: 1.5;
+}
+
+/* ---------- C21 同詞雙義卡（2026-07-27 施工層入庫，規格見 components.md C21） ---------- */
+.dual-word { font-size: 76px; font-weight: 900; font-family: var(--font-head); text-align: center; }
+.dual-cards { display: flex; gap: var(--card-gap); width: 100%; }
+.dual-card { flex: 1; background: var(--bg-card); border-radius: var(--radius-card); padding: 28px 32px; display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center; }
+.dual-card .who { font-size: var(--text-caption); font-weight: 700; color: var(--ink-soft); }
+.dual-card .def { font-size: var(--text-body); font-weight: 700; }
+
+/* ---------- C23 循環圖（2026-07-27 入庫，規格見 components.md C23） ----------
+   結構：.cycle 容器＋SVG 弧線（頁面 HTML 內，marker 箭頭）＋.cnode 絕對定位節點＋.ccenter 中央句
+   參考實作：templates/C23-cycle.html */
+.cycle { position: relative; width: 760px; height: 540px; }
+.cycle svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cycle .cnode {
+  position: absolute; transform: translate(-50%, -50%);
+  background: var(--bg-card); border: var(--border-w) solid var(--ink);
+  border-radius: var(--radius-pill); padding: 18px 44px;
+  font-size: var(--text-body); font-weight: 900; font-family: var(--font-head);
+  white-space: nowrap;
+}
+.cycle .ccenter {
+  position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -20324,23 +21689,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -20368,7 +21737,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -20377,12 +21746,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -20581,7 +21951,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -20798,6 +22168,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -20957,23 +22344,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -21001,7 +22392,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -21010,12 +22401,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -21214,7 +22606,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -21431,6 +22823,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -21604,23 +23013,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -21648,7 +23061,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -21657,12 +23070,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -21861,7 +23275,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -22078,6 +23492,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -22238,23 +23669,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -22282,7 +23717,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -22291,12 +23726,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -22495,7 +23931,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -22712,6 +24148,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -22873,23 +24326,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -22917,7 +24374,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -22926,12 +24383,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -23130,7 +24588,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -23347,6 +24805,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -23526,23 +25001,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -23570,7 +25049,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -23579,12 +25058,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -23783,7 +25263,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -24000,6 +25480,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -24175,23 +25672,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -24219,7 +25720,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -24228,12 +25729,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -24432,7 +25934,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -24649,6 +26151,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -24834,23 +26353,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -24878,7 +26401,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -24887,12 +26410,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -25091,7 +26615,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -25308,6 +26832,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -25511,23 +27052,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -25555,7 +27100,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -25564,12 +27109,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -25768,7 +27314,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -25985,6 +27531,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -26173,23 +27736,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -26217,7 +27784,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -26226,12 +27793,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -26430,7 +27998,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -26647,6 +28215,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -26845,23 +28430,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -26889,7 +28478,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -26898,12 +28487,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -27102,7 +28692,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -27319,6 +28909,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -27486,23 +29093,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -27530,7 +29141,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -27539,12 +29150,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -27743,7 +29355,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -27960,6 +29572,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
@@ -28146,23 +29775,27 @@ body { line-break: strict; }
    第六步重製驗證時再微調。
    ============================================ */
 
-/* 金萱：字體檔在 ../fonts/（2026-07-22 已放入 medium/bold/extrabold；
-   授權包無 heavy 濃字重，900 由 extrabold 擔任） */
+/* 金萱：優先吃系統已安裝字型（local，2026-07-28 起專案資料夾不再放 fonts 複本）；
+   未安裝時退回 ../fonts/ 字型檔（僅技能目錄保留一份）。
+   授權包無 heavy 濃字重，900 由 extrabold 擔任 */
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-ExtraBold&quot;), local(&quot;jf-jinxuan ExtraBold&quot;),
+       url(&quot;fonts/jf-jinxuan-extrabold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 900;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Bold&quot;), local(&quot;jf-jinxuan Bold&quot;),
+       url(&quot;fonts/jf-jinxuan-bold.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: &quot;JinXuan&quot;;
-  src: url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
+  src: local(&quot;jf-jinxuan-Medium&quot;), local(&quot;jf-jinxuan Medium&quot;),
+       url(&quot;fonts/jf-jinxuan-medium.otf&quot;) format(&quot;opentype&quot;);
   font-weight: 500;
   font-display: swap;
 }
@@ -28190,7 +29823,7 @@ body { line-break: strict; }
 
   /* 字級（1080 寬基準） */
   --text-hero: 128px;
-  --text-h1: 76px;
+  --text-h1: 61.33px; /* 46pt，2026-08-02 改為固定值，不分單行/雙行/三行 */
   --text-h2: 48px;
   --text-body: 38px;
   --text-caption: 30px;
@@ -28199,12 +29832,13 @@ body { line-break: strict; }
   /* 間距與圓角 */
   --page-pad: 72px;
   --block-gap: 48px;
+  --section-gap: 80px;
   --card-pad: 40px;
   --card-gap: 32px;
   --radius-card: 24px;
   --radius-pill: 999px;
   --border-w: 3px;
-  --quote-bar-w: 10px;
+  --quote-bar-w: 16px; /* 2026-08-02 改為固定新預設（原 10px） */
 }
 
 /* ============================================
@@ -28403,7 +30037,7 @@ body {
   border-left: var(--quote-bar-w) solid var(--ink);
   padding: 12px 0 12px 44px;
   font-size: 56px;
-  font-weight: 900;
+  font-weight: 500; /* 2026-08-02 改為固定新預設（原 900 粗體） */
   line-height: 1.55;
   font-family: var(--font-head);
   text-align: left;
@@ -28620,6 +30254,23 @@ body {
   position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
   font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
   text-align: center;
+}
+
+/* ---------- C27 三圓交疊圖（2026-07-29 入庫，規格見 components.md C27） ----------
+   結構：.venn 容器＋SVG 三圓（透明底墨線描邊，頁面 HTML 內）＋.vlabel 絕對定位圈標籤
+   ＋.vcenter 交集核心詞
+   參考實作：templates/C27-venn.html */
+.venn { position: relative; width: 760px; height: 560px; }
+.venn svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn .vlabel {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--text-caption); font-weight: 700; font-family: var(--font-head);
+  color: var(--ink); text-align: center; white-space: nowrap;
+}
+.venn .vcenter {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%);
+  font-size: var(--text-h2); font-weight: 900; font-family: var(--font-head);
+  text-align: center; line-height: 1.3;
 }
 
 /* ---------- C19 岔路圖（2026-07-27 入庫，規格見 components.md C19） ----------
