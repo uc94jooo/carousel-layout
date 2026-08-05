@@ -282,6 +282,8 @@ body {
 .author-card {
   background: var(--bg-card);
   border-radius: var(--radius-card);
+  border: 0.5px solid rgba(27, 27, 25, 0.15);
+  box-shadow: 0 4px 11px rgba(27, 27, 25, 0.24);
   padding: var(--card-pad);
   display: flex;
   gap: 36px;
@@ -304,7 +306,6 @@ body {
 .author-card .info { display: flex; flex-direction: column; gap: 10px; text-align: left; }
 .author-card .name { font-size: 42px; font-weight: 900; font-family: var(--font-head); }
 .author-card .bio { font-size: 27px; line-height: 1.65; color: var(--ink); }
-.author-card .follow { font-size: 27px; font-weight: 700; margin-top: 6px; }
 
 /* ---------- C17 垂直 icon 流程 ---------- */
 .icon-flow { display: flex; flex-direction: column; }
